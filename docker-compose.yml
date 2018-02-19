@@ -1,0 +1,41 @@
+version: "3"
+
+volumes:
+    pgsql: ~
+#    mongo: ~
+
+services:
+    mail:
+        image: "schickling/mailcatcher"
+        ports:
+            - "1080:1080"
+#    mongo:
+#        image: "mongo:3.4"
+#        volumes:
+#            - "mongo:/data/db"
+#        ports:
+#            - "27017:27017"
+#    mongo-express:
+#        image: "mongo-express"
+#        environment:
+#            - "ME_CONFIG_BASICAUTH_USERNAME="
+#        ports:
+#            - "8081:8081"
+    pgsql:
+        hostname: "pgsql"
+        image: "postgres:9.3"
+        volumes:
+            - "pgsql:/var/lib/postgresql/data"
+        environment:
+            - "POSTGRES_DB=${DB_NAME}"
+            - "POSTGRES_USER=${DB_USER}"
+            - "POSTGRES_PASSWORD=${DB_PASS}"
+        ports:
+            - "5432:5432"
+    dev:
+        build: .
+        volumes:
+            - ".:/www/symfony-app"
+        working_dir: "/www/symfony-app"
+        ports:
+            - "80:80"

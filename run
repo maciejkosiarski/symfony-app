@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Created by PhpStorm.
+ *
+ * @author maciek.kosiarski@gmail.com
+ */
+
+require_once __DIR__.'/bin/console';
