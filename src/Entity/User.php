@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Class User
@@ -15,6 +16,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="app_users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity(fields="email", message="Email already taken")
+ * @UniqueEntity(fields="username", message="Username already taken")
  *
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
@@ -28,7 +31,7 @@ class User implements UserInterface, \Serializable
 	private $id;
 
 	/**
-	 * @ORM\Column(name="username", type="string", length=40, unique=true, nullable=true)
+	 * @ORM\Column(name="username", type="string", length=255, unique=true, nullable=true)
 	 * @Assert\Type("string")
 	 * @Assert\Length(
 	 *     min = 2,
@@ -44,7 +47,7 @@ class User implements UserInterface, \Serializable
 	private $password;
 
 	/**
-	 * @ORM\Column(name="email", type="string", length=60, unique=true, nullable=false)
+	 * @ORM\Column(name="email", type="string", length=255, unique=true, nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Email()
 	 */
@@ -87,6 +90,7 @@ class User implements UserInterface, \Serializable
 	public function __construct()
 	{
 		$this->isActive  = true;
+		$this->apiKey 	 = sha1(uniqid());
 	}
 
 	/**
@@ -100,7 +104,7 @@ class User implements UserInterface, \Serializable
 	/**
 	 * @return string
 	 */
-	public function getUsername(): string
+	public function getUsername()
 	{
 		return $this->username;
 	}
@@ -116,7 +120,7 @@ class User implements UserInterface, \Serializable
 	/**
 	 * @return string
 	 */
-	public function getPassword(): string
+	public function getPassword()
 	{
 		return $this->password;
 	}
@@ -132,7 +136,7 @@ class User implements UserInterface, \Serializable
 	/**
 	 * @return string
 	 */
-	public function getEmail(): string
+	public function getEmail()
 	{
 		return $this->email;
 	}
@@ -148,7 +152,7 @@ class User implements UserInterface, \Serializable
 	/**
 	 * @return mixed
 	 */
-	public function getPhone(): int
+	public function getPhone()
 	{
 		return $this->phone;
 	}
@@ -206,6 +210,7 @@ class User implements UserInterface, \Serializable
 	public function getRoles() : array
 	{
 		return $this->roles->map(function ($role){
+			/** @var Role $role */
 			return $role->getRole();
 		})->toArray();
 	}
