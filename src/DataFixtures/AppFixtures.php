@@ -11,6 +11,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Notification;
 use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -28,20 +29,22 @@ class AppFixtures extends Fixture
 
 	/**
 	 * @param ObjectManager $manager
-	 * @throws \App\Exception\InvalidRoleException
+	 * @throws \App\Exception\InvalidNotificationTypeException
+	 * @throws \App\Exception\InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
-	public function load(ObjectManager $manager)
+	public function load(ObjectManager $manager): void
 	{
 		$this->loadUsers($manager);
 	}
 
 	/**
 	 * @param ObjectManager $manager
-	 * @throws \App\Exception\InvalidRoleException
+	 * @throws \App\Exception\InvalidNotificationTypeException
+	 * @throws \App\Exception\InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
-	private function loadUsers(ObjectManager $manager)
+	private function loadUsers(ObjectManager $manager): void
 	{
 		foreach ($this->getUserData() as [$username, $password, $email, $apiKey, $roles]) {
 			$user = new User();
@@ -54,11 +57,18 @@ class AppFixtures extends Fixture
 				$manager->persist(new Role($user, $role));
 			}
 
+			foreach ($this->getNotificationsData() as [$type, $message, $dueDate]) {
+				$notification = new Notification($user, $type);
+				$notification->setMessage($message);
+				$notification->setDueDate($dueDate);
+
+				$manager->persist($notification);
+
+			}
+
 			$manager->persist($user);
-
+			$manager->flush();
 		}
-
-		$manager->flush();
 	}
 
 	private function getUserData(): array
@@ -67,6 +77,13 @@ class AppFixtures extends Fixture
 			['admin', 'admin', 'admin@example.com', 'admin_api_key', ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN']],
 			['tom_doe', 'tom_doe', 'tom_admin@symfony.com', 'tom_api_key', ['ROLE_USER']],
 			['john_doe', 'john_doe', 'john_user@symfony.com', 'john_api_key', ['ROLE_USER']],
+		];
+	}
+
+	private function getNotificationsData(): array
+	{
+		return [
+			[2, 'test notification', new \DateTime()],
 		];
 	}
 }

@@ -49,7 +49,7 @@ class SecurityController extends Controller
 	 * @param Request                      $request
 	 * @param UserPasswordEncoderInterface $passwordEncoder
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 * @throws \App\Exception\InvalidRoleException
+	 * @throws \App\Exception\InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
 	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
