@@ -3,8 +3,9 @@
 
 namespace App\Entity;
 
-use App\Exception\InvalidRoleException;
+use App\Exception\InvalidUserRoleException;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Role
@@ -12,63 +13,43 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Table(name="app_roles")
  * @ORM\Entity()
- *
+ * @ORM\HasLifecycleCallbacks()
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
-class Role
+class Role extends BaseEntity
 {
 	const ROLE_USER 	   = 'ROLE_USER';
 	const ROLE_ADMIN 	   = 'ROLE_ADMIN';
 	const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
 	/**
-	 * @ORM\Column(name="id", type="integer", nullable=false)
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	private $id;
-
-	/**
 	 * @var User
-	 *
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="roles")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+	 * @Assert\NotBlank()
+	 * @Assert\Type("App\Entity\User")
 	 */
 	private $user;
 
 	/**
 	 * @var string
-	 *
 	 * @ORM\Column(name="role", type="string", nullable=false)
+	 * @Assert\NotBlank()
+	 * @Assert\Type("string")
 	 */
 	private $role;
 
 	/**
-	 * @var \DateTime
-	 *
-	 * @ORM\Column(name="created_at", type="datetime", nullable=false)
-	 */
-	protected $createdAt;
-
-	/**
 	 * Role constructor.
+	 *
 	 * @param User   $user
 	 * @param string $role
-	 * @throws InvalidRoleException
+	 * @throws InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
-	public function __construct(User $user, string $role)
+	public function __construct( $user, string $role)
 	{	$this->user = $user;
 		$this->setRole($role);
-		$this->createdAt = new \DateTime();
-	}
-
-	/**
-	 * @return mixed
-	 */
-	public function getId()
-	{
-		return $this->id;
 	}
 
 	/**
@@ -97,24 +78,16 @@ class Role
 
 	/**
 	 * @param string $role
-	 * @throws InvalidRoleException
+	 * @throws InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
 	public function setRole(string $role): void
 	{
 		if (!$this->isRoleValid($role)) {
-			throw new InvalidRoleException($role, $this->getRoleList());
+			throw new InvalidUserRoleException($role, $this->getRoleList());
 		}
 
 		$this->role = $role;
-	}
-
-	/**
-	 * @return \DateTime
-	 */
-	public function getCreatedAt(): \DateTime
-	{
-		return $this->createdAt;
 	}
 
 	/**
@@ -123,7 +96,7 @@ class Role
 	 * @throws \InvalidArgumentException
 	 * @throws \ReflectionException
 	 */
-	public function isRoleValid(string $role): bool
+	private function isRoleValid(string $role): bool
 	{
 		return in_array($role, $this->getRoleList());
 	}

@@ -18,18 +18,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields="email", message="Email already taken")
  * @UniqueEntity(fields="username", message="Username already taken")
- *
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
-class User implements UserInterface, \Serializable
+class User extends BaseEntity implements UserInterface, \Serializable
 {
-	/**
-	 * @ORM\Column(name="id", type="integer", nullable=false)
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	private $id;
-
 	/**
 	 * @ORM\Column(name="username", type="string", length=255, unique=true, nullable=true)
 	 * @Assert\Type("string")
@@ -73,32 +65,22 @@ class User implements UserInterface, \Serializable
 
 	/**
 	 * @var Role[]|ArrayCollection
-	 *
 	 * @ORM\OneToMany(targetEntity="Role", mappedBy="user", cascade={"persist"})
 	 * @ORM\OrderBy({"id" = "DESC"})
 	 */
 	public $roles;
 
 	/**
-	 * @var \DateTime
-	 *
-	 * @ORM\Column(name="created_at", type="datetime", nullable=false)
+	 * @var Notification[]|ArrayCollection
+	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="user", cascade={"persist"})
+	 * @ORM\OrderBy({"id" = "DESC"})
 	 */
-	protected $createdAt;
-
+	public $notifications;
 
 	public function __construct()
 	{
 		$this->isActive  = true;
 		$this->apiKey 	 = sha1(uniqid());
-	}
-
-	/**
-	 * @return int
-	 */
-	public function getId(): int
-	{
-		return $this->id;
 	}
 
 	/**
@@ -198,13 +180,6 @@ class User implements UserInterface, \Serializable
 	}
 
 	/**
-	 * @return \DateTime
-	 */
-	public function getCreatedAt(): \DateTime {
-		return $this->createdAt;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function getRoles() : array
@@ -247,16 +222,5 @@ class User implements UserInterface, \Serializable
 			$this->username,
 			$this->password,
 		) = unserialize($serialized);
-	}
-
-	/**
-	 * @ORM\PrePersist()
-	 */
-	public function prePersist() {
-		$this->createdAt = new \DateTime();
-
-		if (!$this->username) {
-			$this->username = $this->email;
-		}
 	}
 }
