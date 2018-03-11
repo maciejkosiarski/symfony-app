@@ -3,15 +3,15 @@
 namespace App\Exception;
 
 /**
- * Class InvalidRoleException
+ * Class InvalidNotificationTypeException
  * @package App\Exception
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
-class InvalidRoleException extends \Exception
+class InvalidNotificationTypeException extends \Exception
 {
-	public function __construct(string $role, array $roles)
+	public function __construct(string $type, array $types)
 	{
-		$message = sprintf('The %s is unacceptable, allowed roles: %s', $role, implode(',', $roles));
+		$message = sprintf('The passed type (%s) is unacceptable, allowed types: %s', $type, implode(',', $types));
 
 		parent::__construct($message);
 	}

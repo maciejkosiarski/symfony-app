@@ -3,11 +3,11 @@
 namespace App\Exception;
 
 /**
- * Class InvalidRoleException
+ * Class InvalidUserRoleException
  * @package App\Exception
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
-class InvalidRoleException extends \Exception
+class InvalidUserRoleException extends \Exception
 {
 	public function __construct(string $role, array $roles)
 	{
