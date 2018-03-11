@@ -24,7 +24,7 @@ class Notification extends BaseEntity
 
 	/**
 	 * @var User
-	 * @ORM\ManyToOne(targetEntity="User", inversedBy="roles")
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="notifications")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type("App\Entity\User")

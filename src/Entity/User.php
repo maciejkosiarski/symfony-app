@@ -3,8 +3,8 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -64,18 +64,18 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	private $isActive;
 
 	/**
-	 * @var Role[]|ArrayCollection
+	 * @var PersistentCollection
 	 * @ORM\OneToMany(targetEntity="Role", mappedBy="user", cascade={"persist"})
 	 * @ORM\OrderBy({"id" = "DESC"})
 	 */
-	public $roles;
+	private $roles;
 
 	/**
-	 * @var Notification[]|ArrayCollection
+	 * @var PersistentCollection
 	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="user", cascade={"persist"})
 	 * @ORM\OrderBy({"id" = "DESC"})
 	 */
-	public $notifications;
+	private $notifications;
 
 	public function __construct()
 	{
@@ -182,12 +182,20 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	/**
 	 * @return array
 	 */
-	public function getRoles() : array
+	public function getRoles(): array
 	{
 		return $this->roles->map(function ($role){
 			/** @var Role $role */
 			return $role->getRole();
 		})->toArray();
+	}
+
+	/**
+	 * @return PersistentCollection
+	 */
+	public function getNotifications(): PersistentCollection
+	{
+		return $this->notifications;
 	}
 
 	public function getSalt()
