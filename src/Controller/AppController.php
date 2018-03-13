@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Notification;
+use App\Service\NotificationsPicker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,14 +16,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
  * @package App\Controller
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
-class DefaultController extends Controller {
+class AppController extends Controller {
 
 	/**
 	 * @Route("/")
+	 * @param NotificationsPicker $picker
 	 * @return Response
 	 */
-	public function index(): Response
+	public function index(NotificationsPicker $picker): Response
 	{
+		$picker->find(Notification::TYPE_EMAIL);
+
 		return new Response(
 			'<html><body>Hello Symfony4</body></html>'
 		);

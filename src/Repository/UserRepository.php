@@ -9,7 +9,6 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 /**
  * Class UserRepository
  * @package App\Repository
- *
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class UserRepository extends EntityRepository implements UserLoaderInterface

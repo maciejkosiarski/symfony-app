@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @package App\Entity
  * @ORM\Table(name="app_notifications")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\NotificationRepository")
  * @ORM\HasLifecycleCallbacks()
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
