@@ -39,7 +39,7 @@ class NotificationController extends Controller
         $notification = new Notification($this->getUser(), Notification::TYPE_EMAIL);
         $form = $this->createForm(NotificationType::class, $notification);
         $form->handleRequest($request);
-		dump($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($notification);

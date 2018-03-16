@@ -8,11 +8,11 @@ use App\Repository\NotificationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Class NotificationsPicker
+ * Class Notifier
  * @package App\Service
  * @author  Maciej Kosiarski <mks@moleo.pl>
  */
-class NotificationsPicker
+class Notifier
 {
 	/**
 	 * @var EntityManagerInterface
@@ -20,12 +20,19 @@ class NotificationsPicker
 	private $em;
 
 	/**
+	 * @var \Swift_Mailer
+	 */
+	private $mailer;
+
+	/**
 	 * NotificationsPicker constructor.
 	 * @param EntityManagerInterface $em
+	 * @param \Swift_Mailer $mailer
 	 */
-	public function __construct(EntityManagerInterface $em)
+	public function __construct(EntityManagerInterface $em, \Swift_Mailer $mailer)
 	{
 		$this->em = $em;
+		$this->mailer = $mailer;
 	}
 
 	/**
@@ -41,10 +48,9 @@ class NotificationsPicker
 	}
 
 	/**
-	 * @param int           $type
-	 * @param \Swift_Mailer $mailer
+	 * @param int $type
 	 */
-	public function notify(int $type, \Swift_Mailer $mailer): void
+	public function notify(int $type): void
 	{
 		foreach ($this->find($type) as $notification) {
 			$message = (new \Swift_Message('Notify'))
@@ -52,7 +58,7 @@ class NotificationsPicker
 				->setTo($notification->getUser()->getEmail())
 				->setBody($notification->getMessage());
 
-			$mailer->send($message);
+			$this->mailer->send($message);
 
 			if (!$notification->isLoop()) {
 				$notification->activeToggle();

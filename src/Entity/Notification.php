@@ -50,7 +50,6 @@ class Notification extends BaseEntity
 	/**
 	 * @var boolean
 	 * @ORM\Column(name="active", type="boolean", nullable=false)
-	 * @Assert\NotBlank()
 	 * @Assert\Type("boolean")
 	 */
 	private $active;
@@ -58,7 +57,6 @@ class Notification extends BaseEntity
 	/**
 	 * @var boolean
 	 * @ORM\Column(name="loop", type="boolean", nullable=false)
-	 * @Assert\NotBlank()
 	 * @Assert\Type("boolean")
 	 */
 	private $loop;
@@ -111,11 +109,11 @@ class Notification extends BaseEntity
 	}
 
 	/**
-	 * @param string $type
+	 * @param int $type
 	 * @throws InvalidNotificationTypeException
 	 * @throws \ReflectionException
 	 */
-	public function setType(string $type): void
+	public function setType(int $type): void
 	{
 		if (!$this->isTypeValid($type)) {
 			throw new InvalidNotificationTypeException($type, $this->getTypeList());
@@ -127,7 +125,7 @@ class Notification extends BaseEntity
 	/**
 	 * @return string
 	 */
-	public function getMessage(): string
+	public function getMessage(): ?string
 	{
 		return $this->message;
 	}
@@ -169,7 +167,7 @@ class Notification extends BaseEntity
 	/**
 	 * @return \DateTime
 	 */
-	public function getDueDate(): \DateTime
+	public function getDueDate(): ?\DateTime
 	{
 		return $this->dueDate;
 	}

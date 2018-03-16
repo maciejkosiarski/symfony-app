@@ -3,15 +3,22 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use App\Entity\Notification;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
  * Class NotificationRepository
  * @package App\Repository
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
-class NotificationRepository extends EntityRepository
+class NotificationRepository extends ServiceEntityRepository
 {
+	public function __construct(RegistryInterface $registry)
+	{
+		parent::__construct($registry, Notification::class);
+	}
+
 	/**
 	 * @param int $type
 	 * @return array

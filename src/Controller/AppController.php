@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Notification;
-use App\Service\NotificationsPicker;
+use App\Service\Notifier;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,12 +20,12 @@ class AppController extends Controller {
 
 	/**
 	 * @Route("/")
-	 * @param NotificationsPicker $picker
+	 * @param Notifier $notifier
 	 * @return Response
 	 */
-	public function index(NotificationsPicker $picker): Response
+	public function index(Notifier $notifier): Response
 	{
-		$picker->find(Notification::TYPE_EMAIL);
+		$notifier->notify(Notification::TYPE_EMAIL);
 
 		return new Response(
 			'<html><body>Hello Symfony4</body></html>'
@@ -34,8 +34,9 @@ class AppController extends Controller {
 
 	/**
 	 * @Route("/lucky/number")
+	 * @return Response
 	 */
-	public function number()
+	public function number(): Response
 	{
 		$number = mt_rand(0, 100);
 
@@ -47,8 +48,9 @@ class AppController extends Controller {
 	/**
 	 * @Route("/user")
 	 * @Security("has_role('ROLE_USER')")
+	 * @return Response
 	 */
-	public function user()
+	public function user(): Response
 	{
 		return new Response('<html><body>User page!</body></html>');
 	}
@@ -57,8 +59,9 @@ class AppController extends Controller {
 	/**
 	 * @Route("/admin")
 	 * @Security("has_role('ROLE_ADMIN')")
+	 * @return Response
 	 */
-	public function admin()
+	public function admin(): Response
 	{
 		return new Response('<html><body>Admin page!</body></html>');
 	}
@@ -66,8 +69,9 @@ class AppController extends Controller {
 	/**
 	 * @Route("/super")
 	 * @Security("has_role('ROLE_SUPER_ADMIN')")
+	 * @return Response
 	 */
-	public function super()
+	public function super(): Response
 	{
 		return new Response('<html><body>Super Admin page!</body></html>');
 	}
