@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notification index{% endblock %}
+
+{% block body %}
+    <h1>Notification index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Message</th>
+                <th>Active</th>
+                <th>Loop</th>
+                <th>DueDate</th>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for notification in notifications %}
+            <tr>
+                <td>{{ notification.type }}</td>
+                <td>{{ notification.message }}</td>
+                <td>{{ notification.active ? 'Yes' : 'No' }}</td>
+                <td>{{ notification.loop ? 'Yes' : 'No' }}</td>
+                <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ notification.id }}</td>
+                <td>{{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ notification.updatedAt ? notification.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
+                    <a href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('notification_new') }}">Create new</a>
+{% endblock %}
