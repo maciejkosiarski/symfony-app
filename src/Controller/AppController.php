@@ -28,7 +28,7 @@ class AppController extends Controller {
 		$notifier->notify(Notification::TYPE_EMAIL);
 
 		return new Response(
-			'<html><body>Hello Symfony4</body></html>'
+			'<html><body>Hello Symfony4(fetch)</body></html>'
 		);
 	}
 
