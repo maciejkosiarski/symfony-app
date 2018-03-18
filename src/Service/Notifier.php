@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Entity\Notification;
 use App\Repository\NotificationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -37,9 +38,9 @@ class Notifier
 
 	/**
 	 * @param int $type
-	 * @return array|Notification[]
+	 * @return ArrayCollection
 	 */
-	public function find(int $type): array
+	public function find(int $type): ArrayCollection
 	{
 		/** @var NotificationRepository $repository */
 		$repository = $this->em->getRepository(Notification::class);

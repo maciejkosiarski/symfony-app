@@ -7,9 +7,11 @@ namespace App\Controller;
 use App\Entity\Notification;
 use App\Service\Notifier;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class DefaultController
@@ -23,9 +25,29 @@ class AppController extends Controller {
 	 * @param Notifier $notifier
 	 * @return Response
 	 */
-	public function index(Notifier $notifier): Response
+	public function index(SerializerInterface $serializer, Notifier $notifier): Response
 	{
-		$notifier->notify(Notification::TYPE_EMAIL);
+		$notifications = $notifier->find(Notification::TYPE_EMAIL);
+
+		return new JsonResponse(
+			$notifications->map(function (Notification $notification) {
+				return $notification->getUser()->getEmail() . ' -> ' .$notification->getMessage();
+			})->toArray()
+		);
+	}
+
+	/**
+	 * @Route("/test")
+	 * @param Notifier $notifier
+	 * @return Response
+	 */
+	public function notifierTest(Notifier $notifier): Response
+	{
+		try {
+			$notifier->notify(Notification::TYPE_EMAIL);
+		} catch (\Exception $e) {
+			return new JsonResponse($e->getMessage());
+		}
 
 		return new Response(
 			'<html><body>Hello Symfony4(fetch)</body></html>'

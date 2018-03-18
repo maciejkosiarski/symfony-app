@@ -5,6 +5,7 @@ namespace App\Repository;
 
 use App\Entity\Notification;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -21,11 +22,10 @@ class NotificationRepository extends ServiceEntityRepository
 
 	/**
 	 * @param int $type
-	 * @return array
-	 */
-	public function getActiveByType(int $type): array
+	 * @return ArrayCollection	 */
+	public function getActiveByType(int $type): ArrayCollection
 	{
-		return $this->createQueryBuilder('n')
+		$notifications = $this->createQueryBuilder('n')
 			->where('n.active = :active')
 			->setParameter('active', true)
 			->andWhere('n.type = :type')
@@ -34,5 +34,7 @@ class NotificationRepository extends ServiceEntityRepository
 			->setParameter('dueDate', new \DateTime('now'))
 			->getQuery()
 			->getResult();
+
+		return  new ArrayCollection($notifications);
 	}
 }
