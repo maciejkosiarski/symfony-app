@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class DefaultController
@@ -25,7 +24,7 @@ class AppController extends Controller {
 	 * @param Notifier $notifier
 	 * @return Response
 	 */
-	public function index(SerializerInterface $serializer, Notifier $notifier): Response
+	public function index(Notifier $notifier): Response
 	{
 		$notifications = $notifier->find(Notification::TYPE_EMAIL);
 
