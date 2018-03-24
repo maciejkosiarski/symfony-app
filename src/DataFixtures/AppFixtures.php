@@ -46,12 +46,11 @@ class AppFixtures extends Fixture
 	 */
 	private function loadUsers(ObjectManager $manager): void
 	{
-		foreach ($this->getUserData() as [$username, $password, $email, $apiKey, $roles]) {
+		foreach ($this->getUserData() as [$username, $password, $email, $roles]) {
 			$user = new User();
 			$user->setUsername($username);
 			$user->setEmail($email);
 			$user->setPassword($this->passwordEncoder->encodePassword($user, $password));
-			$user->setApiKey($apiKey);
 
 			foreach ($roles as $role) {
 				$manager->persist(new Role($user, $role));
@@ -74,9 +73,9 @@ class AppFixtures extends Fixture
 	private function getUserData(): array
 	{
 		return [
-			['admin', 'admin', 'admin@example.com', 'admin_api_key', ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN']],
-			['tom_doe', 'tom_doe', 'tom_admin@symfony.com', 'tom_api_key', ['ROLE_USER']],
-			['john_doe', 'john_doe', 'john_user@symfony.com', 'john_api_key', ['ROLE_USER']],
+			['admin', 'admin', 'admin@example.com', ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN']],
+			['tom_doe', 'tom_doe', 'tom_admin@symfony.com', ['ROLE_USER']],
+			['john_doe', 'john_doe', 'john_user@symfony.com', ['ROLE_USER']],
 		];
 	}
 

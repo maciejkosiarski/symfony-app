@@ -53,6 +53,7 @@ class User extends BaseEntity implements UserInterface, \Serializable
 
 	/**
 	 * @ORM\Column(name="api_key", type="string", unique=true)
+	 * @ORM\GeneratedValue(strategy="UUID")
 	 * @Assert\Type("string")
 	 */
 	private $apiKey;
