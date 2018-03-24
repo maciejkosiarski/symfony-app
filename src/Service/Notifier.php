@@ -55,8 +55,9 @@ class Notifier
 	{
 		foreach ($this->find($type) as $notification) {
 			$message = (new \Swift_Message('Notify'))
-				->setFrom('notify@example.com')
+				->setFrom(getenv('MAILER_FROM'))
 				->setTo($notification->getUser()->getEmail())
+				->setSubject(mb_substr($notification->getMessage(), 0, 15))
 				->setBody($notification->getMessage());
 
 			$this->mailer->send($message);
