@@ -1,72 +1,26 @@
 <?php
 
-
 namespace App\Service;
 
 use App\Entity\Notification;
-use App\Repository\NotificationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Class Notifier
+ * Interface Notifier
+ *
  * @package App\Service
  * @author  Maciej Kosiarski <mks@moleo.pl>
  */
-class Notifier
+interface Notifier
 {
 	/**
-	 * @var EntityManagerInterface
+	 * Send specific types of notifications to users
+	 * @param Notification $notification
 	 */
-	private $em;
+	public function notify(Notification $notification): void;
 
 	/**
-	 * @var \Swift_Mailer
+	 * Get type of notifications to send
+	 * @return int
 	 */
-	private $mailer;
-
-	/**
-	 * NotificationsPicker constructor.
-	 * @param EntityManagerInterface $em
-	 * @param \Swift_Mailer $mailer
-	 */
-	public function __construct(EntityManagerInterface $em, \Swift_Mailer $mailer)
-	{
-		$this->em = $em;
-		$this->mailer = $mailer;
-	}
-
-	/**
-	 * @param int $type
-	 * @return ArrayCollection
-	 */
-	public function find(int $type): ArrayCollection
-	{
-		/** @var NotificationRepository $repository */
-		$repository = $this->em->getRepository(Notification::class);
-
-		return $repository->getActiveByType($type);
-	}
-
-	/**
-	 * @param int $type
-	 */
-	public function notify(int $type): void
-	{
-		foreach ($this->find($type) as $notification) {
-			$message = (new \Swift_Message('Notify'))
-				->setFrom(getenv('MAILER_FROM'))
-				->setTo($notification->getUser()->getEmail())
-				->setSubject(mb_substr($notification->getMessage(), 0, 15))
-				->setBody($notification->getMessage());
-
-			$this->mailer->send($message);
-
-			if (!$notification->isLoop()) {
-				$notification->activeToggle();
-
-				$this->em->flush();
-			}
-		}
-	}
+	public function getNotificationType(): int;
 }
