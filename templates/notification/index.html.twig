@@ -24,7 +24,11 @@
             <tr>
                 <td>{{ notification.type }}</td>
                 <td>{{ notification.message }}</td>
-                <td>{{ notification.active ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('notification_toggle_active', {'id': notification.id}) }}">
+                        {{ notification.active ? 'Yes' : 'No' }}
+                    </a>
+                </td>
                 <td>{{ notification.loop ? 'Yes' : 'No' }}</td>
                 <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ notification.id }}</td>

@@ -21,11 +21,12 @@ class NotificationController extends Controller
      * @Route("/", name="notification_index", methods="GET")
 	 * @param NotificationRepository $notificationRepository
 	 * @return Response
-	 * @throws \Doctrine\ORM\ORMException
      */
     public function index(NotificationRepository $notificationRepository): Response
     {
-        return $this->render('notification/index.html.twig', ['notifications' => $notificationRepository->findByUser($this->getUser()->getId())]);
+        return $this->render('notification/index.html.twig', [
+        	'notifications' => $notificationRepository->findByUser($this->getUser()),
+		]);
     }
 
     /**
@@ -105,5 +106,21 @@ class NotificationController extends Controller
         $em->flush();
 
         return $this->redirectToRoute('notification_index');
+    }
+
+	/**
+	 * @Route("/{id}/toggle/active", name="notification_toggle_active", methods="GET")
+	 * @param Notification $notification
+	 * @return Response
+	 */
+	public function activeToggle(Notification $notification)
+	{
+		$notification->activeToggle();
+
+		$em = $this->getDoctrine()->getManager();
+
+		$em->flush();
+
+		return $this->redirectToRoute('notification_index');
     }
 }
