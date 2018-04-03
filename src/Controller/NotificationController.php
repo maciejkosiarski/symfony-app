@@ -21,6 +21,7 @@ class NotificationController extends Controller
      * @Route("/", name="notification_index", methods="GET")
 	 * @param NotificationRepository $notificationRepository
 	 * @return Response
+	 * @throws \Doctrine\ORM\ORMException
      */
     public function index(NotificationRepository $notificationRepository): Response
     {
