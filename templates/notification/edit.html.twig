@@ -5,6 +5,8 @@
 {% block body %}
     <h1>Edit Notification</h1>
 
+    {{ include('alerts.html.twig') }}
+
     {{ include('notification/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('notification_index') }}">back to list</a>

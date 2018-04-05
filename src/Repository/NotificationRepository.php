@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Service\Notifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -55,6 +56,27 @@ class NotificationRepository extends ServiceEntityRepository
 				->addOrderBy('n.dueDate', 'ASC')
 				->getQuery()
 				->getResult()
+		);
+	}
+
+	/**
+	 * @param int  $page
+	 * @param int  $limit
+	 * @param User $user
+	 * @return Paginator
+	 */
+	public function findPaginateByUser(int $page, int $limit, User $user)
+	{
+		return new Paginator(
+			$this->createQueryBuilder('n')
+				->where('n.user = :user')
+				->setParameter('user', $user)
+				->addOrderBy('n.active', 'DESC')
+				->addOrderBy('n.dueDate', 'ASC')
+				->setFirstResult($page * $limit - $limit)
+				->setMaxResults($limit)
+				->getQuery(),
+			$fetchJoinCollection = true
 		);
 	}
 }

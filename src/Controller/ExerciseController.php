@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Exercise;
 use App\Form\ExerciseType;
-use Doctrine\ORM\EntityManager;
+use App\Repository\ExerciseRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,14 +18,29 @@ use Symfony\Component\Routing\Annotation\Route;
 class ExerciseController extends Controller
 {
     /**
-     * @Route("/", name="exercise_index", methods="GET")
+     * @Route("/all/{page}/{limit}",name="exercise_index",methods="GET",defaults={
+	 *  	"page"=1,
+	 *  	"limit"=5
+	 *	},
+	 *  requirements={
+	 *		"page"="\d+",
+     * 		"limit"="\d+"
+	 *  })
+	 * @param ExerciseRepository $exerciseRepository
+	 * @param int $page
+	 * @param int $limit
 	 * @return Response
 	 */
-    public function index(): Response
+    public function index(ExerciseRepository $exerciseRepository, int $page, int $limit): Response
     {
-		$exerciseRepository = $this->getDoctrine()->getRepository(Exercise::class);
+		$paginator = $exerciseRepository->findPaginateByUser($page, $limit,$this->getUser());
 
-        return $this->render('exercise/index.html.twig', ['exercises' => $exerciseRepository->findByUser($this->getUser()->getId())]);
+        return $this->render('exercise/index.html.twig', [
+        	'exercises'   => $paginator->getIterator(),
+			'totalPages'  => ceil($paginator->count() / $limit),
+			'currentPage' => $page,
+			'limit'       => $limit,
+		]);
     }
 
     /**
@@ -45,6 +60,11 @@ class ExerciseController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($exercise);
             $em->flush();
+
+			$this->addFlash(
+				'success',
+				'Exercise successfully created!'
+			);
 
             return $this->redirectToRoute('exercise_index');
         }
@@ -79,6 +99,11 @@ class ExerciseController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+			$this->addFlash(
+				'success',
+				'Exercise successfully edited!'
+			);
+
             return $this->redirectToRoute('exercise_edit', ['id' => $exercise->getId()]);
         }
 
@@ -97,12 +122,22 @@ class ExerciseController extends Controller
     public function delete(Request $request, Exercise $exercise): Response
     {
         if (!$this->isCsrfTokenValid('delete'.$exercise->getId(), $request->request->get('_token'))) {
+			$this->addFlash(
+				'warning',
+				'We have some trouble, Try again later'
+			);
+
             return $this->redirectToRoute('exercise_index');
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($exercise);
         $em->flush();
+
+		$this->addFlash(
+			'success',
+			'Exercise successfully removed!'
+		);
 
         return $this->redirectToRoute('exercise_index');
     }

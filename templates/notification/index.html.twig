@@ -5,6 +5,10 @@
 {% block body %}
     <h1>Notification index</h1>
 
+    {{ include('alerts.html.twig') }}
+
+    {{ include('notification/limits.html.twig') }}
+
     <table class="table">
         <thead>
             <tr>
@@ -46,6 +50,8 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {{ include('notification/pagination.html.twig') }}
 
     <a href="{{ path('notification_new') }}">Create new</a>
 {% endblock %}

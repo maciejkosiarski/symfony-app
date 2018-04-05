@@ -3,7 +3,12 @@
 {% block title %}Exercise index{% endblock %}
 
 {% block body %}
+
     <h1>Exercise index</h1>
+
+    {{ include('alerts.html.twig') }}
+
+    {{ include('exercise/limits.html.twig') }}
 
     <table class="table">
         <thead>
@@ -35,5 +40,8 @@
         </tbody>
     </table>
 
+    {{ include('exercise/pagination.html.twig') }}
+
     <a href="{{ path('exercise_new') }}">Create new</a>
+
 {% endblock %}

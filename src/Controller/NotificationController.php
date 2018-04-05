@@ -17,15 +17,29 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class NotificationController extends Controller
 {
-    /**
-     * @Route("/", name="notification_index", methods="GET")
+	/**
+	 * @Route("/all/{page}/{limit}",name="notification_index",methods="GET",defaults={
+	 *  	"page"=1,
+	 *  	"limit"=5
+	 *	},
+	 *  requirements={
+	 *		"page"="\d+",
+	 * 		"limit"="\d+"
+	 *  })
 	 * @param NotificationRepository $notificationRepository
+	 * @param int $page
+	 * @param int $limit
 	 * @return Response
-     */
-    public function index(NotificationRepository $notificationRepository): Response
+	 */
+    public function index(NotificationRepository $notificationRepository, int $page, int $limit): Response
     {
-        return $this->render('notification/index.html.twig', [
-        	'notifications' => $notificationRepository->findByUser($this->getUser()),
+		$paginator = $notificationRepository->findPaginateByUser($page, $limit,$this->getUser());
+
+		return $this->render('notification/index.html.twig', [
+			'notifications' => $paginator->getIterator(),
+			'totalPages'   => ceil($paginator->count() / $limit),
+			'currentPage'  => $page,
+			'limit'        => $limit,
 		]);
     }
 
@@ -46,6 +60,11 @@ class NotificationController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($notification);
             $em->flush();
+
+			$this->addFlash(
+				'success',
+				'Notification successfully created!'
+			);
 
             return $this->redirectToRoute('notification_index');
         }
@@ -80,6 +99,11 @@ class NotificationController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+			$this->addFlash(
+				'success',
+				'Notification successfully edited!'
+			);
+
             return $this->redirectToRoute('notification_edit', ['id' => $notification->getId()]);
         }
 
@@ -98,12 +122,22 @@ class NotificationController extends Controller
     public function delete(Request $request, Notification $notification): Response
     {
         if (!$this->isCsrfTokenValid('delete'.$notification->getId(), $request->request->get('_token'))) {
+			$this->addFlash(
+				'warning',
+				'We have some trouble, Try again later'
+			);
+
             return $this->redirectToRoute('notification_index');
         }
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($notification);
         $em->flush();
+
+		$this->addFlash(
+			'success',
+			'Notification successfully removed!'
+		);
 
         return $this->redirectToRoute('notification_index');
     }
