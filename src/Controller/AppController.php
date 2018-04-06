@@ -22,9 +22,7 @@ class AppController extends Controller {
 	 */
 	public function index(): Response
 	{
-		return new Response(
-			'<html><body>Index page</body></html>'
-		);
+		return $this->render('app/index.html.twig');
 	}
 
 	/**

@@ -19,12 +19,12 @@ class ExerciseController extends Controller
 {
     /**
      * @Route("/all/{page}/{limit}",name="exercise_index",methods="GET",defaults={
-	 *  	"page"=1,
-	 *  	"limit"=5
+	 *  	"page" = 1,
+	 *  	"limit" = 5
 	 *	},
 	 *  requirements={
-	 *		"page"="\d+",
-     * 		"limit"="\d+"
+	 *		"page" = "\d+",
+     * 		"limit" = "\d+"
 	 *  })
 	 * @param ExerciseRepository $exerciseRepository
 	 * @param int $page

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Exercise index{% endblock %}
+
+{% block body %}
+
+    <h1>Exercise index</h1>
+
+    {{ include('alerts.html.twig') }}
+
+    {{ include('exercise/limits.html.twig') }}
+
+    <a href="{{ path('exercise_index') }}">Exercises</a>
+    <a href="{{ path('notification_index') }}">Notification</a>
+
+{% endblock %}
