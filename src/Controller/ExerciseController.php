@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Exercise;
 use App\Form\ExerciseType;
 use App\Repository\ExerciseRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,16 +31,20 @@ class ExerciseController extends Controller
 	 * @param int $page
 	 * @param int $limit
 	 * @return Response
+	 * @throws NonUniqueResultException
 	 */
     public function index(ExerciseRepository $exerciseRepository, int $page, int $limit): Response
     {
 		$paginator = $exerciseRepository->findPaginateByUser($page, $limit,$this->getUser());
 
         return $this->render('exercise/index.html.twig', [
-        	'exercises'   => $paginator->getIterator(),
-			'totalPages'  => ceil($paginator->count() / $limit),
-			'currentPage' => $page,
-			'limit'       => $limit,
+        	'exercises'     => $paginator->getIterator(),
+			'totalPages'    => ceil($paginator->count() / $limit),
+			'currentPage'   => $page,
+			'limit'         => $limit,
+			'count'		    => $paginator->count(),
+			'firstExercise' => $exerciseRepository->findOneBy([], ['createdAt' => 'ASC']),
+			'totalTime'     => $exerciseRepository->countUserExercisesTime($this->getUser()),
 		]);
     }
 

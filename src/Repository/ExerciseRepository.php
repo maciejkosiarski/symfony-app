@@ -40,4 +40,19 @@ class ExerciseRepository extends ServiceEntityRepository
 			$fetchJoinCollection = true
 		);
 	}
+
+	/**
+	 * @param User $uer
+	 * @return mixed
+	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 */
+	public function countUserExercisesTime(User $uer)
+	{
+		return $this->createQueryBuilder('e')
+			->Where('e.user = :user')
+			->setParameter('user', $uer)
+			->select('SUM(e.minutes) as minutes')
+			->getQuery()
+			->getSingleScalarResult();
+	}
 }

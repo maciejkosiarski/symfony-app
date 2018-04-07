@@ -4,11 +4,21 @@
 
 {% block body %}
 
-    <h1>Exercise index</h1>
+    <h1>Exercise index </h1>
+    <a href="{{ path('home') }}">Back</a>
 
     {{ include('alerts.html.twig') }}
 
     {{ include('exercise/limits.html.twig') }}
+
+    <button type="button" class="btn btn-outline-primary disabled">
+        Beginning <span class="badge badge-warning">{{ firstExercise ? firstExercise.createdAt|date('Y-m-d') : 'when?' }}</span>
+        Number of exercises <span class="badge badge-warning">{{ count }}</span>
+        Total time (hours) <span class="badge badge-warning">{{ totalTime / 60 }}</span>
+    </button>
+
+    <br>
+    <br>
 
     <table class="table">
         <thead>

@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AppController extends Controller {
 
 	/**
-	 * @Route("/")
+	 * @Route("/", name="home",methods="GET")
 	 * @return Response
 	 */
 	public function index(): Response
