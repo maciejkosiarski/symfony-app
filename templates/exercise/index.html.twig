@@ -11,11 +11,11 @@
 
     {{ include('exercise/limits.html.twig') }}
 
-    <button type="button" class="btn btn-outline-primary disabled">
+    <div class="btn btn-outline-primary">
         Beginning <span class="badge badge-warning">{{ firstExercise ? firstExercise.createdAt|date('Y-m-d') : 'when?' }}</span>
-        Number of exercises <span class="badge badge-warning">{{ count }}</span>
-        Total time (hours) <span class="badge badge-warning">{{ totalTime / 60 }}</span>
-    </button>
+        Exercises <span class="badge badge-warning">{{ count }}</span>
+        Total time <span class="badge badge-warning">{{ totalTime }}h</span>
+    </div>
 
     <br>
     <br>

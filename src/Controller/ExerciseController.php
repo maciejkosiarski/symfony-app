@@ -44,7 +44,7 @@ class ExerciseController extends Controller
 			'limit'         => $limit,
 			'count'		    => $paginator->count(),
 			'firstExercise' => $exerciseRepository->findOneBy([], ['createdAt' => 'ASC']),
-			'totalTime'     => $exerciseRepository->countUserExercisesTime($this->getUser()),
+			'totalTime'     => $exerciseRepository->countTotalHoursByUser($this->getUser()),
 		]);
     }
 

@@ -46,13 +46,15 @@ class ExerciseRepository extends ServiceEntityRepository
 	 * @return mixed
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function countUserExercisesTime(User $uer)
+	public function countTotalHoursByUser(User $uer)
 	{
-		return $this->createQueryBuilder('e')
+		$minutes = $this->createQueryBuilder('e')
 			->Where('e.user = :user')
 			->setParameter('user', $uer)
-			->select('SUM(e.minutes) as minutes')
+			->select('SUM(e.minutes)')
 			->getQuery()
 			->getSingleScalarResult();
+
+		return round(($minutes / 60), 2);
 	}
 }
