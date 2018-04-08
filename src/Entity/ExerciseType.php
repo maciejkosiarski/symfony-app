@@ -3,7 +3,6 @@
 
 namespace App\Entity;
 
-use App\Exception\InvalidExerciseTypeException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,9 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ExerciseType extends BaseEntity
 {
-	const TYPE_OARSMAN = 1;
-	const TYPE_RUN     = 2;
-
 	/**
 	 * @var string
 	 * @Assert\NotBlank()
@@ -38,19 +34,24 @@ class ExerciseType extends BaseEntity
 		$this->name = $name;
 	}
 
+	public function __toString()
+	{
+		return $this->name;
+	}
+
 	/**
 	 * @return string
 	 */
-	public function getName(): string {
+	public function getName(): string
+	{
 		return $this->name;
 	}
 
 	/**
 	 * @param string $name
 	 */
-	public function setName(string $name): void {
+	public function setName(string $name): void
+	{
 		$this->name = $name;
 	}
-
-
 }

@@ -35,11 +35,15 @@
             <tr>
                 <td>{{ exercise.type }}</td>
                 <td>{{ exercise.minutes }}</td>
-                <td>{{ exercise.createdAt ? exercise.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ exercise.updatedAt ? exercise.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td data-toggle="tooltip" title="{{ exercise.createdAt ? exercise.createdAt|date('Y-m-d H:i:s') : '' }}">
+                    {{ exercise.createdAt ? exercise.createdAt|date('Y-m-d') : '' }}
+                </td>
+                <td data-toggle="tooltip" title="{{ exercise.updatedAt ? exercise.updatedAt|date('Y-m-d H:i:s') : '' }}">
+                    {{ exercise.updatedAt ? exercise.updatedAt|date('Y-m-d') : '' }}
+                </td>
                 <td>
-                    <a href="{{ path('exercise_show', {'id': exercise.id}) }}">show</a>
-                    <a href="{{ path('exercise_edit', {'id': exercise.id}) }}">edit</a>
+                    <a class="btn btn-outline-primary" href="{{ path('exercise_show', {'id': exercise.id}) }}">show</a>
+                    <a class="btn btn-outline-primary" href="{{ path('exercise_edit', {'id': exercise.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

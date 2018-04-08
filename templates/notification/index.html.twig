@@ -16,11 +16,10 @@
                 <th>Type</th>
                 <th>Message</th>
                 <th>Active</th>
-                <th>Loop</th>
                 <th>DueDate</th>
-                <th>Id</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
+                <th>links</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -34,14 +33,19 @@
                         {{ notification.active ? 'Yes' : 'No' }}
                     </a>
                 </td>
-                <td>{{ notification.loop ? 'Yes' : 'No' }}</td>
                 <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ notification.id }}</td>
-                <td>{{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ notification.updatedAt ? notification.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td data-toggle="tooltip" title="{{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i:s') : '' }}">
+                    {{ notification.createdAt ? notification.createdAt|date('Y-m-d') : '' }}
+                </td>
+                <td data-toggle="tooltip" title="{{ notification.updatedAt ? notification.updatedAt|date('Y-m-d H:i:s') : '' }}">
+                    {{ notification.updatedAt ? notification.updatedAt|date('Y-m-d') : '' }}
+                </td>
                 <td>
-                    <a href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
-                    <a href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
+                    <a class="btn btn-outline-primary" href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
+                    <a class="btn btn-outline-primary" href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
+                </td>
+                <td>
+                    {{ include('notification/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}
