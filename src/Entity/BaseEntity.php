@@ -32,9 +32,9 @@ abstract class BaseEntity
 	protected $updatedAt;
 
 	/**
-	 * @return mixed
+	 * @return integer|null
 	 */
-	public function getId()
+	public function getId(): ?int
 	{
 		return $this->id;
 	}
@@ -74,7 +74,7 @@ abstract class BaseEntity
 	/**
 	 * @ORM\PrePersist()
 	 */
-	public function prePersist()
+	public function prePersist(): void
 	{
 		$this->createdAt = $this->updatedAt = new \DateTime();
 	}
@@ -82,7 +82,7 @@ abstract class BaseEntity
 	/**
 	 * @ORM\PreUpdate()
 	 */
-	public function preUpdate()
+	public function preUpdate(): void
 	{
 		$this->updatedAt = new \DateTime();
 	}

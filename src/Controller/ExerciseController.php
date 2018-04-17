@@ -19,23 +19,28 @@ use Symfony\Component\Routing\Annotation\Route;
 class ExerciseController extends Controller
 {
     /**
-     * @Route("/all/{page}/{limit}",name="exercise_index",methods="GET",defaults={
+     * @Route("/all/{type}/{page}/{limit}",name="exercise_index",methods="GET",defaults={
+	 *  	"type" = 1,
 	 *  	"page" = 1,
 	 *  	"limit" = 5
 	 *	},
 	 *  requirements={
+	 *		"type" = "\d+",
 	 *		"page" = "\d+",
      * 		"limit" = "\d+"
 	 *  })
 	 * @param ExerciseRepository $exerciseRepository
+	 * @param int $type
 	 * @param int $page
 	 * @param int $limit
 	 * @return Response
 	 * @throws NonUniqueResultException
 	 */
-    public function index(ExerciseRepository $exerciseRepository, int $page, int $limit): Response
+    public function index(ExerciseRepository $exerciseRepository, int $type, int $page, int $limit): Response
     {
-		$paginator = $exerciseRepository->findPaginateByUser($page, $limit,$this->getUser());
+    	$user = $this->getUser();
+
+		$paginator = $exerciseRepository->findPaginateByUser($page, $limit, $user);
 
         return $this->render('exercise/index.html.twig', [
         	'exercises'     => $paginator->getIterator(),
@@ -44,7 +49,7 @@ class ExerciseController extends Controller
 			'limit'         => $limit,
 			'count'		    => $paginator->count(),
 			'firstExercise' => $exerciseRepository->findOneBy([], ['createdAt' => 'ASC']),
-			'totalTime'     => $exerciseRepository->countTotalHoursByUser($this->getUser()),
+			'totalTime'     => $exerciseRepository->countTotalHoursByUser($user),
 		]);
     }
 

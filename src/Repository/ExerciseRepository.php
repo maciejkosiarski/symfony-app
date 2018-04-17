@@ -27,7 +27,7 @@ class ExerciseRepository extends ServiceEntityRepository
 	 * @param User $user
 	 * @return Paginator
 	 */
-	public function findPaginateByUser(int $page, int $limit, User $user)
+	public function findPaginateByUser(int $page, int $limit, User $user): Paginator
 	{
 		return new Paginator(
 			$this->createQueryBuilder('e')
@@ -46,7 +46,7 @@ class ExerciseRepository extends ServiceEntityRepository
 	 * @return mixed
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function countTotalHoursByUser(User $uer)
+	public function countTotalHoursByUser(User $uer): float
 	{
 		$minutes = $this->createQueryBuilder('e')
 			->Where('e.user = :user')

@@ -147,7 +147,7 @@ class NotificationController extends Controller
 	 * @param Notification $notification
 	 * @return Response
 	 */
-	public function activeToggle(Notification $notification)
+	public function activeToggle(Notification $notification): Response
 	{
 		$notification->activeToggle();
 

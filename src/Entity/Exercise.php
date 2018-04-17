@@ -48,6 +48,14 @@ class Exercise extends BaseEntity
 	private $minutes;
 
 	/**
+	 * @var string
+	 * @ORM\Column(name="note", type="string", nullable=true)
+	 * @Assert\Type("string")
+	 * @Assert\Length(max = 255, maxMessage = "Your note cannot be longer than 255 characters")
+	 */
+	private $note;
+
+	/**
 	 * Exercise constructor.
 	 *
 	 * @param User $user
@@ -103,15 +111,33 @@ class Exercise extends BaseEntity
 	/**
 	 * @return int
 	 */
-	public function getMinutes(): int {
+	public function getMinutes(): int
+	{
 		return $this->minutes;
 	}
 
 	/**
 	 * @param int $minutes
 	 */
-	public function setMinutes(int $minutes): void {
+	public function setMinutes(int $minutes): void
+	{
 		$this->minutes = $minutes;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNote(): string
+	{
+		return $this->note;
+	}
+
+	/**
+	 * @param string $note
+	 */
+	public function setNote(string $note): void
+	{
+		$this->note = $note;
 	}
 
 	/**

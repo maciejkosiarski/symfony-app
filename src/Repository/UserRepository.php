@@ -5,6 +5,7 @@ namespace App\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class UserRepository
@@ -18,7 +19,7 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
 	 * @return mixed|null|\Symfony\Component\Security\Core\User\UserInterface
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function loadUserByUsername($username)
+	public function loadUserByUsername($username): ?UserInterface
 	{
 		return $this->createQueryBuilder('u')
 			->where('u.username = :username OR u.email = :email')

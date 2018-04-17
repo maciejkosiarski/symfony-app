@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -26,9 +27,9 @@ class SecurityController extends Controller
 	 *
 	 * @param Request             $request
 	 * @param AuthenticationUtils $authUtils
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @return Response
 	 */
-	public function login(Request $request, AuthenticationUtils $authUtils)
+	public function login(Request $request, AuthenticationUtils $authUtils): Response
 	{
 		// get the login error if there is one
 		$error = $authUtils->getLastAuthenticationError();
@@ -48,11 +49,11 @@ class SecurityController extends Controller
 	 *
 	 * @param Request                      $request
 	 * @param UserPasswordEncoderInterface $passwordEncoder
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
 	 * @throws \App\Exception\InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
-	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+	public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
 	{
 		// 1) build the form
 		$user = new User();

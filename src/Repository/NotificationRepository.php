@@ -46,7 +46,7 @@ class NotificationRepository extends ServiceEntityRepository
 	 * @param User $user
 	 * @return ArrayCollection
 	 */
-	public function findByUser(User $user)
+	public function findByUser(User $user):ArrayCollection
 	{
 		return new ArrayCollection(
 			$this->createQueryBuilder('n')
@@ -65,7 +65,7 @@ class NotificationRepository extends ServiceEntityRepository
 	 * @param User $user
 	 * @return Paginator
 	 */
-	public function findPaginateByUser(int $page, int $limit, User $user)
+	public function findPaginateByUser(int $page, int $limit, User $user): Paginator
 	{
 		return new Paginator(
 			$this->createQueryBuilder('n')

@@ -85,9 +85,9 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getUsername()
+	public function getUsername(): ?string
 	{
 		return $this->username;
 	}
@@ -95,15 +95,15 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	/**
 	 * @param string $username
 	 */
-	public function setUsername(string $username)
+	public function setUsername(string $username): void
 	{
 		$this->username = $username;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getPassword()
+	public function getPassword(): ?string
 	{
 		return $this->password;
 	}
@@ -111,15 +111,15 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	/**
 	 * @param string $password
 	 */
-	public function setPassword(string $password)
+	public function setPassword(string $password): void
 	{
 		$this->password = $password;
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function getEmail()
+	public function getEmail(): ?string
 	{
 		return $this->email;
 	}
@@ -127,15 +127,15 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	/**
 	 * @param string $email
 	 */
-	public function setEmail(string $email)
+	public function setEmail(string $email): void
 	{
 		$this->email = $email;
 	}
 
 	/**
-	 * @return mixed
+	 * @return integer
 	 */
-	public function getPhone()
+	public function getPhone(): ?int
 	{
 		return $this->phone;
 	}
@@ -143,7 +143,7 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	/**
 	 * @param int $phone
 	 */
-	public function setPhone(int $phone)
+	public function setPhone(int $phone): void
 	{
 		$this->phone = $phone;
 	}
@@ -159,7 +159,7 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	/**
 	 * @param string $apiKey
 	 */
-	public function setApiKey(string $apiKey)
+	public function setApiKey(string $apiKey): void
 	{
 		$this->apiKey = $apiKey;
 	}
@@ -175,7 +175,7 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	/**
 	 * @param bool $isActive
 	 */
-	public function setIsActive(bool $isActive)
+	public function setIsActive(bool $isActive): void
 	{
 		$this->isActive = $isActive;
 	}
