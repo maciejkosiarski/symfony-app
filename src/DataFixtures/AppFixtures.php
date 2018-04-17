@@ -11,6 +11,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\ExerciseType;
 use App\Entity\Notification;
 use App\Entity\Role;
 use App\Entity\User;
@@ -36,6 +37,7 @@ class AppFixtures extends Fixture
 	public function load(ObjectManager $manager): void
 	{
 		$this->loadUsers($manager);
+		$this->loadExerciseTypes($manager);
 	}
 
 	/**
@@ -70,6 +72,15 @@ class AppFixtures extends Fixture
 		}
 	}
 
+	private function loadExerciseTypes(ObjectManager $manager): void
+	{
+		foreach ($this->getExerciseTypeData() as $name) {
+			$manager->persist(new ExerciseType($name));
+		}
+
+		$manager->flush();
+	}
+
 	private function getUserData(): array
 	{
 		return [
@@ -83,6 +94,14 @@ class AppFixtures extends Fixture
 	{
 		return [
 			[2, 'test notification', new \DateTime()],
+		];
+	}
+
+	private function getExerciseTypeData(): array
+	{
+		return [
+			'rowing machine',
+			'run',
 		];
 	}
 }
