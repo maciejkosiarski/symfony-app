@@ -51,26 +51,10 @@ class NotifyCommand extends Command
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): void
 	{
-		$notifier = $this->getNotifier($input->getArgument('notifier'));
+		$notifier = $this->factory->getNotifierByName($input->getArgument('notifier'));
 
 		foreach ($this->repository->getActiveByNotifier($notifier) as $notification) {
 			$notifier->notify($notification);
 		}
-	}
-
-	/**
-	 * @param string $notifierType
-	 * @return Notifier
-	 * @throws CreateNotifierException
-	 */
-	private function getNotifier(string $notifierType): Notifier
-	{
-		$createMethod = 'create' . ucfirst($notifierType). 'Notifier';
-
-		if (method_exists($this->factory, $createMethod)) {
-			return $this->factory->{$createMethod}();
-		};
-
-		throw new CreateNotifierException($createMethod);
 	}
 }

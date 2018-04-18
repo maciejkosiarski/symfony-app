@@ -15,6 +15,7 @@
 /public/build/fonts/glyphicons-*
 /public/build/images/glyphicons-*
 /.idea
+composer.lock
 ###> symfony/framework-bundle ###
 .env
 /public/bundles/

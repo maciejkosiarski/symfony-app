@@ -30,7 +30,11 @@
     <div class="btn-group">
         <div class="btn btn-outline-primary disabled">
             Beginning <span class="badge badge-warning">{{ firstExercise ? firstExercise.createdAt|date('Y-m-d') : 'when?' }}</span>
+        </div>
+        <div class="btn btn-outline-primary disabled">
             Exercises <span class="badge badge-warning">{{ count }}</span>
+        </div>
+        <div class="btn btn-outline-primary disabled">
             Total time <span class="badge badge-warning">{{ totalTime }}h</span>
         </div>
     </div>
