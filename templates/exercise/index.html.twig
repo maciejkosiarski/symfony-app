@@ -4,58 +4,75 @@
 
 {% block body %}
 
-    <h1>Exercise index </h1>
-    <a href="{{ path('home') }}">Back</a>
+    <h1>Exercise {{ currentType.name }} index</h1>
 
     {{ include('alerts.html.twig') }}
 
-    {{ include('exercise/limits.html.twig') }}
+    <div class="btn-group">
+        <a href="{{ path('home') }}" class="btn btn-outline-primary">Back</a>
+        <a href="{{ path('exercise_new') }}" class="btn btn-outline-primary">Create new</a>
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown">
+                Exercise types
+            </button>
+            <div class="dropdown-menu">
+                {% for type in exerciseTypes %}
 
-    <div class="btn btn-outline-primary">
-        Beginning <span class="badge badge-warning">{{ firstExercise ? firstExercise.createdAt|date('Y-m-d') : 'when?' }}</span>
-        Exercises <span class="badge badge-warning">{{ count }}</span>
-        Total time <span class="badge badge-warning">{{ totalTime }}h</span>
+                    <a class="dropdown-item {% if currentType.id == type.id  %} disabled {% endif %}" href="{{ url('exercise_index', {'type':type.id, 'page': 1, 'limit': limit}) }}">
+                        {{ type.name }}
+                    </a>
+
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="btn-group">
+        <div class="btn btn-outline-primary disabled">
+            Beginning <span class="badge badge-warning">{{ firstExercise ? firstExercise.createdAt|date('Y-m-d') : 'when?' }}</span>
+            Exercises <span class="badge badge-warning">{{ count }}</span>
+            Total time <span class="badge badge-warning">{{ totalTime }}h</span>
+        </div>
     </div>
 
-    <br>
-    <br>
-
-    <table class="table">
-        <thead>
+    {{ include('exercise/limits.html.twig') }}
+    <hr>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="thead-light">
             <tr>
-                <th>Type</th>
                 <th>Minutes</th>
+                <th>Note</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
                 <th>actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for exercise in exercises %}
-            <tr>
-                <td>{{ exercise.type }}</td>
-                <td>{{ exercise.minutes }}</td>
-                <td data-toggle="tooltip" title="{{ exercise.createdAt ? exercise.createdAt|date('Y-m-d H:i:s') : '' }}">
-                    {{ exercise.createdAt ? exercise.createdAt|date('Y-m-d') : '' }}
-                </td>
-                <td data-toggle="tooltip" title="{{ exercise.updatedAt ? exercise.updatedAt|date('Y-m-d H:i:s') : '' }}">
-                    {{ exercise.updatedAt ? exercise.updatedAt|date('Y-m-d') : '' }}
-                </td>
-                <td>
-                    <a class="btn btn-outline-primary" href="{{ path('exercise_show', {'id': exercise.id}) }}">show</a>
-                    <a class="btn btn-outline-primary" href="{{ path('exercise_edit', {'id': exercise.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for exercise in exercises %}
+                <tr>
+                    <td>{{ exercise.minutes }}</td>
+                    <td>{{ exercise.note }}</td>
+                    <td data-toggle="tooltip" title="{{ exercise.createdAt ? exercise.createdAt|date('Y-m-d H:i:s') : '' }}">
+                        {{ exercise.createdAt ? exercise.createdAt|date('Y-m-d') : '' }}
+                    </td>
+                    <td data-toggle="tooltip" title="{{ exercise.updatedAt ? exercise.updatedAt|date('Y-m-d H:i:s') : '' }}">
+                        {{ exercise.updatedAt ? exercise.updatedAt|date('Y-m-d') : '' }}
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-primary" href="{{ path('exercise_edit', {'id': exercise.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    {{ include('exercise/pagination.html.twig') }}
+        {{ include('exercise/pagination.html.twig') }}
+    </div>
 
-    <a href="{{ path('exercise_new') }}">Create new</a>
 
 {% endblock %}

@@ -3,7 +3,6 @@
 
 namespace App\Entity;
 
-use App\Exception\InvalidExerciseTypeException;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,9 +17,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Exercise extends BaseEntity
 {
-	const TYPE_OARSMAN = 1;
-	const TYPE_RUN     = 2;
-
 	/**
 	 * @var User
 	 * @ORM\ManyToOne(targetEntity="User")
@@ -31,43 +27,41 @@ class Exercise extends BaseEntity
 	private $user;
 
 	/**
-	 * @var integer
-	 * @ORM\Column(name="type", type="integer", length=30,  nullable=false)
+	 * @var ExerciseType
+	 * @ORM\ManyToOne(targetEntity="App\Entity\ExerciseType")
+	 * @ORM\JoinColumn(name="type_id", referencedColumnName="id", nullable=false)
 	 * @Assert\NotBlank()
-	 * @Assert\Type("integer")
+	 * @Assert\Type("ExerciseType")
 	 */
 	private $type;
 
 	/**
 	 * @var int
 	 * @ORM\Column(name="minutes", type="integer", nullable=false)
-	 * @Assert\NotBlank()
-	 * @Assert\Type("integer")
-	 * @Assert\GreaterThan(0)
+	 * @Assert\NotBlank(groups={"form"})
+	 * @Assert\Type("integer", groups={"form"})
+	 * @Assert\GreaterThan(0, groups={"form"})
 	 */
 	private $minutes;
 
 	/**
 	 * @var string
 	 * @ORM\Column(name="note", type="string", nullable=true)
-	 * @Assert\Type("string")
-	 * @Assert\Length(max = 255, maxMessage = "Your note cannot be longer than 255 characters")
+	 * @Assert\Type("string", groups={"form"})
+	 * @Assert\Length(max = 255, maxMessage = "Your note cannot be longer than 255 characters", groups={"form"})
 	 */
 	private $note;
 
 	/**
 	 * Exercise constructor.
 	 *
-	 * @param User $user
-	 * @param int  $type
-	 * @param int  $minutes
-	 * @throws InvalidExerciseTypeException
-	 * @throws \ReflectionException
+	 * @param User         $user
+	 * @param int          $minutes
 	 */
-	public function __construct(User $user, int $type, $minutes)
-	{	$this->user   = $user;
+	public function __construct(User $user, $minutes)
+	{
+		$this->user    = $user;
 		$this->minutes = $minutes;
-		$this->setType($type);
 	}
 
 	/**
@@ -87,24 +81,18 @@ class Exercise extends BaseEntity
 	}
 
 	/**
-	 * @return string
+	 * @return ExerciseType
 	 */
-	public function getType(): string
+	public function getType(): ?ExerciseType
 	{
 		return $this->type;
 	}
 
 	/**
-	 * @param int $type
-	 * @throws InvalidExerciseTypeException
-	 * @throws \ReflectionException
+	 * @param ExerciseType $type
 	 */
-	public function setType(int $type): void
+	public function setType(ExerciseType $type): void
 	{
-		if (!$this->isTypeValid($type)) {
-			throw new InvalidExerciseTypeException($type, $this->getTypeList());
-		}
-
 		$this->type = $type;
 	}
 
@@ -127,7 +115,7 @@ class Exercise extends BaseEntity
 	/**
 	 * @return string
 	 */
-	public function getNote(): string
+	public function getNote(): ?string
 	{
 		return $this->note;
 	}
@@ -139,41 +127,4 @@ class Exercise extends BaseEntity
 	{
 		$this->note = $note;
 	}
-
-	/**
-	 * @param int $type
-	 * @return bool
-	 * @throws \InvalidArgumentException
-	 * @throws \ReflectionException
-	 */
-	private function isTypeValid(int $type): bool
-	{
-		return in_array($type, $this->getTypeList());
-	}
-
-
-	/**
-	 * @var int[]
-	 */
-	private $typeList;
-
-	/**
-	 * @return int[]
-	 * @throws \ReflectionException
-	 */
-	private function getTypeList(): array
-	{
-		if (empty($this->typeList)) {
-			$reflection = new \ReflectionClass(Exercise::class);
-
-			foreach ($reflection->getConstants() as $constantName => $constantValue) {
-				if (strpos($constantName, 'TYPE_') !== false) {
-					$this->typeList[$constantName] = $constantValue;
-				}
-			}
-		}
-
-		return $this->typeList;
-	}
-
 }

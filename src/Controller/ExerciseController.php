@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Exercise;
-use App\Form\ExerciseType;
+use App\Entity\ExerciseType;
+use App\Form\ExerciseType as ExerciseForm;
 use App\Repository\ExerciseRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -30,26 +31,28 @@ class ExerciseController extends Controller
      * 		"limit" = "\d+"
 	 *  })
 	 * @param ExerciseRepository $exerciseRepository
-	 * @param int $type
+	 * @param ExerciseType $type
 	 * @param int $page
 	 * @param int $limit
 	 * @return Response
 	 * @throws NonUniqueResultException
 	 */
-    public function index(ExerciseRepository $exerciseRepository, int $type, int $page, int $limit): Response
+    public function index(ExerciseRepository $exerciseRepository, ExerciseType $type, int $page, int $limit): Response
     {
     	$user = $this->getUser();
 
-		$paginator = $exerciseRepository->findPaginateByUser($page, $limit, $user);
+		$paginator = $exerciseRepository->findPaginateByUserAndType($page, $limit, $user, $type);
 
         return $this->render('exercise/index.html.twig', [
+        	'currentType'	=> $type,
+        	'exerciseTypes' => $this->getDoctrine()->getRepository(ExerciseType::class)->findAll(),
         	'exercises'     => $paginator->getIterator(),
 			'totalPages'    => ceil($paginator->count() / $limit),
 			'currentPage'   => $page,
 			'limit'         => $limit,
 			'count'		    => $paginator->count(),
 			'firstExercise' => $exerciseRepository->findOneBy([], ['createdAt' => 'ASC']),
-			'totalTime'     => $exerciseRepository->countTotalHoursByUser($user),
+			'totalTime'     => $exerciseRepository->countTotalHoursByUserAndType($user, $type),
 		]);
     }
 
@@ -57,13 +60,11 @@ class ExerciseController extends Controller
      * @Route("/new", name="exercise_new", methods="GET|POST")
 	 * @param Request $request
 	 * @return Response
-	 * @throws \App\Exception\InvalidExerciseTypeException
-	 * @throws \ReflectionException
 	 */
     public function new(Request $request): Response
     {
-        $exercise = new Exercise($this->getUser(),1,30);
-        $form = $this->createForm(ExerciseType::class, $exercise);
+        $exercise = new Exercise($this->getUser(),30);
+        $form = $this->createForm(ExerciseForm::class, $exercise);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -103,7 +104,7 @@ class ExerciseController extends Controller
 	 */
     public function edit(Request $request, Exercise $exercise): Response
     {
-        $form = $this->createForm(ExerciseType::class, $exercise);
+        $form = $this->createForm(ExerciseForm::class, $exercise);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

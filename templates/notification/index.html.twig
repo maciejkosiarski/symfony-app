@@ -3,60 +3,68 @@
 {% block title %}Notification index{% endblock %}
 
 {% block body %}
+
     <h1>Notification index</h1>
-    <a href="{{ path('home') }}">Back</a>
 
     {{ include('alerts.html.twig') }}
 
+    <div class="btn-group">
+        <a href="{{ path('home') }}" class="btn btn-outline-primary">Back</a>
+        <a href="{{ path('notification_new') }}" class="btn btn-outline-primary">Create new</a>
+    </div>
+
     {{ include('notification/limits.html.twig') }}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Message</th>
-                <th>Active</th>
-                <th>DueDate</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
-                <th>links</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for notification in notifications %}
-            <tr>
-                <td>{{ notification.type }}</td>
-                <td>{{ notification.message }}</td>
-                <td>
-                    <a href="{{ path('notification_toggle_active', {'id': notification.id}) }}">
-                        {{ notification.active ? 'Yes' : 'No' }}
-                    </a>
-                </td>
-                <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td data-toggle="tooltip" title="{{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i:s') : '' }}">
-                    {{ notification.createdAt ? notification.createdAt|date('Y-m-d') : '' }}
-                </td>
-                <td data-toggle="tooltip" title="{{ notification.updatedAt ? notification.updatedAt|date('Y-m-d H:i:s') : '' }}">
-                    {{ notification.updatedAt ? notification.updatedAt|date('Y-m-d') : '' }}
-                </td>
-                <td>
-                    <a class="btn btn-outline-primary" href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
-                    <a class="btn btn-outline-primary" href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
-                </td>
-                <td>
-                    {{ include('notification/_delete_form.html.twig') }}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <hr>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th>Type</th>
+                    <th>Message</th>
+                    <th>Active</th>
+                    <th>DueDate</th>
+                    <th>CreatedAt</th>
+                    <th>UpdatedAt</th>
+                    <th>links</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for notification in notifications %}
+                <tr>
+                    <td>{{ notification.type }}</td>
+                    <td>{{ notification.message }}</td>
+                    <td>
+                        <a href="{{ path('notification_toggle_active', {'id': notification.id}) }}">
+                            {{ notification.active ? 'Yes' : 'No' }}
+                        </a>
+                    </td>
+                    <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td data-toggle="tooltip" title="{{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i:s') : '' }}">
+                        {{ notification.createdAt ? notification.createdAt|date('Y-m-d') : '' }}
+                    </td>
+                    <td data-toggle="tooltip" title="{{ notification.updatedAt ? notification.updatedAt|date('Y-m-d H:i:s') : '' }}">
+                        {{ notification.updatedAt ? notification.updatedAt|date('Y-m-d') : '' }}
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-primary" href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
+                        <a class="btn btn-outline-primary" href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
+                    </td>
+                    <td>
+                        {{ include('notification/_delete_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     {{ include('notification/pagination.html.twig') }}
 
-    <a href="{{ path('notification_new') }}">Create new</a>
 {% endblock %}

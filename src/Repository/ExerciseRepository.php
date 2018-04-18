@@ -5,6 +5,7 @@ namespace App\Repository;
 
 use App\Entity\Exercise;
 use App\Entity\User;
+use App\Entity\ExerciseType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -25,14 +26,17 @@ class ExerciseRepository extends ServiceEntityRepository
 	 * @param int  $page
 	 * @param int  $limit
 	 * @param User $user
+	 * @param ExerciseType $type
 	 * @return Paginator
 	 */
-	public function findPaginateByUser(int $page, int $limit, User $user): Paginator
+	public function findPaginateByUserAndType(int $page, int $limit, User $user, ExerciseType $type): Paginator
 	{
 		return new Paginator(
 			$this->createQueryBuilder('e')
 				->where('e.user = :user')
 				->setParameter('user', $user)
+				->andWhere('e.type = :type')
+				->setParameter('type', $type)
 				->addOrderBy('e.createdAt', 'DESC')
 				->setFirstResult($page * $limit - $limit)
 				->setMaxResults($limit)
@@ -42,15 +46,18 @@ class ExerciseRepository extends ServiceEntityRepository
 	}
 
 	/**
-	 * @param User $uer
-	 * @return mixed
+	 * @param User $user
+	 * @param ExerciseType $type
+	 * @return float
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function countTotalHoursByUser(User $uer): float
+	public function countTotalHoursByUserAndType(User $user, ExerciseType $type): float
 	{
 		$minutes = $this->createQueryBuilder('e')
 			->Where('e.user = :user')
-			->setParameter('user', $uer)
+			->setParameter('user', $user)
+			->andWhere('e.type = :type')
+			->setParameter('type', $type)
 			->select('SUM(e.minutes)')
 			->getQuery()
 			->getSingleScalarResult();
