@@ -8,7 +8,7 @@ use App\Entity\Notification;
  * Interface Notifier
  *
  * @package App\Service
- * @author  Maciej Kosiarski <mks@moleo.pl>
+ * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 interface Notifier
 {

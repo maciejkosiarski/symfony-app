@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Class ReminderFactory
  * @package App\Service\Factory
- * @author  Maciej Kosiarski <mks@moleo.pl>
+ * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class NotifierFactory
 {

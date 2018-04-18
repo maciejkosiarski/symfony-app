@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 /**
  * Class UserType
  * @package App\Form
- * @author  Maciej Kosiarski <mks@moleo.pl>
+ * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class UserType extends AbstractType
 {

@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class BaseEntity
  *
  * @package App\Entity
- * @author  Maciej Kosiarski <mks@moleo.pl>
+ * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 abstract class BaseEntity
 {

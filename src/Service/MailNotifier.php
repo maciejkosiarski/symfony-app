@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 /**
  * Class MailNotifier
  * @package App\Service
- * @author  Maciej Kosiarski <mks@moleo.pl>
+ * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class MailNotifier implements Notifier
 {
