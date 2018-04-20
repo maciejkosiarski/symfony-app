@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
-use App\Exception\CreateNotifierException;
+use App\Entity\Notification;
 use App\Repository\NotificationRepository;
 use App\Service\Factory\NotifierFactory;
-use App\Service\Notifier;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +19,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class NotifyCommand extends Command
 {
 	/**
+	 * @var LoggerInterface
+	 */
+	private $logger;
+
+	/**
 	 * @var NotifierFactory
 	 */
 	private $factory;
@@ -28,10 +33,12 @@ class NotifyCommand extends Command
 	 */
 	private $repository;
 
-	public function __construct(?string $name = null, NotificationRepository $repository, NotifierFactory $factory)
+	public function __construct(?string $name = null, LoggerInterface $logger, NotificationRepository $repository, NotifierFactory $factory)
 	{
+		$this->logger     = $logger;
 		$this->repository = $repository;
 		$this->factory    = $factory;
+
 		parent::__construct($name);
 	}
 
@@ -47,14 +54,19 @@ class NotifyCommand extends Command
 	/**
 	 * @param InputInterface  $input
 	 * @param OutputInterface $output
-	 * @throws CreateNotifierException
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output): void
 	{
-		$notifier = $this->factory->getNotifierByName($input->getArgument('notifier'));
+		try{
+			$notifier = $this->factory->getNotifierByName($input->getArgument('notifier'));
+			/** @var Notification $notification */
+			foreach ($this->repository->getActiveByNotifier($notifier) as $notification) {
+				$notifier->notify($notification);
 
-		foreach ($this->repository->getActiveByNotifier($notifier) as $notification) {
-			$notifier->notify($notification);
+				$this->logger->info(sprintf('Notification id: %s successfully sended.', $notification->getId()));
+			}
+		} catch (\Exception $e) {
+			$this->logger->error($e->getMessage());
 		}
 	}
 }

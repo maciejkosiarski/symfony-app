@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Notification;
+use App\Exception\NotifyException;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -33,6 +34,10 @@ class MailNotifier implements Notifier
 		$this->em = $em;
 	}
 
+	/**
+	 * @param Notification $notification
+	 * @throws NotifyException
+	 */
 	public function notify(Notification $notification): void
 	{
 		$message = (new \Swift_Message(mb_substr($notification->getMessage(), 0, 15) . '...'))
@@ -40,13 +45,9 @@ class MailNotifier implements Notifier
 			->setTo($notification->getUser()->getEmail())
 			->setBody($notification->getMessage());
 
-		$this->mailer->send($message);
+		$this->send($message);
 
-		if (!$notification->isLoop()) {
-			$notification->activeToggle();
-
-			$this->em->flush();
-		}
+		$this->disableNotification($notification);
 	}
 
 	/**
@@ -55,5 +56,26 @@ class MailNotifier implements Notifier
 	public function getNotificationType(): int
 	{
 		return Notification::TYPE_EMAIL;
+	}
+
+	/**
+	 * @param \Swift_Message $message
+	 * @throws NotifyException
+	 */
+	private function send(\Swift_Message $message): void
+	{
+		if(0 === $this->mailer->send($message)){
+			throw new NotifyException(current($message->getTo()));
+		};
+	}
+
+	/**
+	 * @param Notification $notification
+	 */
+	private function disableNotification(Notification $notification): void
+	{
+		$notification->activeToggle();
+
+		$this->em->flush();
 	}
 }
