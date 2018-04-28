@@ -4,7 +4,7 @@
 
 {% block body %}
 
-    <h1>Exercise {{ currentType.name }} index</h1>
+    <h1>Exercise {{ (currentType) ? currentType.name : 'All' }} index</h1>
 
     {{ include('alerts.html.twig') }}
 
@@ -16,9 +16,13 @@
                 Exercise types
             </button>
             <div class="dropdown-menu">
+                <a class="dropdown-item {% if currentType == null %} disabled {% endif %}" href="{{ url('exercise_index', {'page': 1, 'limit': limit }) }}">
+                    All
+                </a>
+
                 {% for type in exerciseTypes %}
 
-                    <a class="dropdown-item {% if currentType.id == type.id  %} disabled {% endif %}" href="{{ url('exercise_index', {'type':type.id, 'page': 1, 'limit': limit}) }}">
+                    <a class="dropdown-item {% if currentType == type  %} disabled {% endif %}" href="{{ url('exercise_index', {'page': 1, 'limit': limit, 'type':type.id }) }}">
                         {{ type.name }}
                     </a>
 
@@ -40,11 +44,16 @@
     </div>
 
     {{ include('exercise/limits.html.twig') }}
+
     <hr>
+
+    {{ include('exercise/pagination.html.twig') }}
+
     <div class="table-responsive">
         <table class="table">
             <thead class="thead-light">
             <tr>
+                <th>Type</th>
                 <th>Minutes</th>
                 <th>Note</th>
                 <th>CreatedAt</th>
@@ -55,6 +64,7 @@
             <tbody>
             {% for exercise in exercises %}
                 <tr>
+                    <td>{{ exercise.type }}</td>
                     <td>{{ exercise.minutes }}</td>
                     <td>{{ exercise.note }}</td>
                     <td data-toggle="tooltip" title="{{ exercise.createdAt ? exercise.createdAt|date('Y-m-d H:i:s') : '' }}">

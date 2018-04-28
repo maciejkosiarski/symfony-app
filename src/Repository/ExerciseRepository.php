@@ -26,39 +26,46 @@ class ExerciseRepository extends ServiceEntityRepository
 	 * @param int  $page
 	 * @param int  $limit
 	 * @param User $user
-	 * @param ExerciseType $type
+	 * @param ExerciseType|null $type
 	 * @return Paginator
 	 */
-	public function findPaginateByUserAndType(int $page, int $limit, User $user, ExerciseType $type): Paginator
+	public function findPaginateByUserAndType(int $page, int $limit, User $user, ?ExerciseType $type): Paginator
 	{
-		return new Paginator(
-			$this->createQueryBuilder('e')
-				->where('e.user = :user')
-				->setParameter('user', $user)
-				->andWhere('e.type = :type')
-				->setParameter('type', $type)
-				->addOrderBy('e.createdAt', 'DESC')
-				->setFirstResult($page * $limit - $limit)
-				->setMaxResults($limit)
-				->getQuery(),
-			$fetchJoinCollection = true
-		);
+		$query = $this->createQueryBuilder('e')
+			->where('e.user = :user')
+			->setParameter('user', $user);
+
+		if ($type) {
+			$query->andWhere('e.type = :type')
+				->setParameter('type', $type);
+		}
+
+		$query->addOrderBy('e.createdAt', 'DESC')
+			->setFirstResult($page * $limit - $limit)
+			->setMaxResults($limit)
+			->getQuery();
+
+		return new Paginator($query, $fetchJoinCollection = true);
 	}
 
 	/**
 	 * @param User $user
-	 * @param ExerciseType $type
+	 * @param ExerciseType|null $type
 	 * @return float
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function countTotalHoursByUserAndType(User $user, ExerciseType $type): float
+	public function countTotalHoursByUserAndType(User $user, ?ExerciseType $type): float
 	{
-		$minutes = $this->createQueryBuilder('e')
+		$query = $this->createQueryBuilder('e')
 			->Where('e.user = :user')
-			->setParameter('user', $user)
-			->andWhere('e.type = :type')
-			->setParameter('type', $type)
-			->select('SUM(e.minutes)')
+			->setParameter('user', $user);
+
+		if ($type) {
+			$query->andWhere('e.type = :type')
+				->setParameter('type', $type);
+		}
+
+		$minutes = $query->select('SUM(e.minutes)')
 			->getQuery()
 			->getSingleScalarResult();
 

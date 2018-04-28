@@ -20,24 +20,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class ExerciseController extends Controller
 {
     /**
-     * @Route("/all/{type}/{page}/{limit}",name="exercise_index",methods="GET",defaults={
-	 *  	"type" = 1,
+     * @Route("/all/{page}/{limit}/{type}",name="exercise_index",methods="GET",defaults={
 	 *  	"page" = 1,
-	 *  	"limit" = 5
+	 *  	"limit" = 5,
+	 *      "type" = null,
 	 *	},
 	 *  requirements={
-	 *		"type" = "\d+",
 	 *		"page" = "\d+",
-     * 		"limit" = "\d+"
+     * 		"limit" = "\d+",
+	 *		"type" = "\d+|null"
 	 *  })
 	 * @param ExerciseRepository $exerciseRepository
-	 * @param ExerciseType $type
+	 * @param ExerciseType|null $type
 	 * @param int $page
 	 * @param int $limit
 	 * @return Response
 	 * @throws NonUniqueResultException
 	 */
-    public function index(ExerciseRepository $exerciseRepository, ExerciseType $type, int $page, int $limit): Response
+    public function index(ExerciseRepository $exerciseRepository, ?ExerciseType $type, int $page, int $limit): Response
     {
     	$user = $this->getUser();
 

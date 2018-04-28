@@ -25,8 +25,6 @@
                     <th>Message</th>
                     <th>Active</th>
                     <th>DueDate</th>
-                    <th>CreatedAt</th>
-                    <th>UpdatedAt</th>
                     <th>links</th>
                     <th>actions</th>
                 </tr>
@@ -42,12 +40,6 @@
                         </a>
                     </td>
                     <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
-                    <td data-toggle="tooltip" title="{{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i:s') : '' }}">
-                        {{ notification.createdAt ? notification.createdAt|date('Y-m-d') : '' }}
-                    </td>
-                    <td data-toggle="tooltip" title="{{ notification.updatedAt ? notification.updatedAt|date('Y-m-d H:i:s') : '' }}">
-                        {{ notification.updatedAt ? notification.updatedAt|date('Y-m-d') : '' }}
-                    </td>
                     <td>
                         <a class="btn btn-outline-primary" href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
                         <a class="btn btn-outline-primary" href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
