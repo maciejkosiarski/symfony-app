@@ -24,8 +24,8 @@
                 <td>{{ notification.loop ? 'Yes' : 'No' }}</td>
             </tr>
             <tr>
-                <th>DueDate</th>
-                <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
+                <th>Next run</th>
+                <td>{{ notification.intervalExpression }}</td>
             </tr>
             <tr>
                 <th>Id</th>

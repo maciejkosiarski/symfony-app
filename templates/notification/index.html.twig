@@ -24,7 +24,7 @@
                     <th>Type</th>
                     <th>Message</th>
                     <th>Active</th>
-                    <th>DueDate</th>
+                    <th>Next run</th>
                     <th>links</th>
                     <th>actions</th>
                 </tr>
@@ -39,7 +39,7 @@
                             {{ notification.active ? 'Yes' : 'No' }}
                         </a>
                     </td>
-                    <td>{{ notification.dueDate ? notification.dueDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ notification.intervalExpression }}</td>
                     <td>
                         <a class="btn btn-outline-primary" href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
                         <a class="btn btn-outline-primary" href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>

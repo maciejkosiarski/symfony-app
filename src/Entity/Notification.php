@@ -62,12 +62,13 @@ class Notification extends BaseEntity
 	private $loop;
 
 	/**
-	 * @var \DateTime
-	 * @ORM\Column(name="due_date", type="datetime", nullable=false)
+	 * @var string
+	 * @ORM\Column(name="interval_expression", type="string", nullable=false)
 	 * @Assert\NotBlank()
-	 * @Assert\DateTime()
+	 * @Assert\Type(type="string")
+	 * @Assert\Regex(pattern="^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$^", message="Interval expression has invalid format.")
 	 */
-	private $dueDate;
+	private $intervalExpression;
 
 	/**
 	 * Notification constructor.
@@ -165,19 +166,21 @@ class Notification extends BaseEntity
 	}
 
 	/**
-	 * @return \DateTime
+	 * @return string
 	 */
-	public function getDueDate(): ?\DateTime
+	public function getIntervalExpression(): ?string
 	{
-		return $this->dueDate;
+		return $this->intervalExpression;
 	}
 
 	/**
-	 * @param \DateTime $dueDate
+	 * @param string $expression
 	 */
-	public function setDueDate(\DateTime $dueDate): void
+	public function setIntervalExpression(string $expression): void
 	{
-		$this->dueDate = $dueDate;
+		$expressions = $this->getDefaultExpressions();
+
+		$this->intervalExpression = (key_exists($expression, $expressions)) ? $expressions[$expression] : $expression;
 	}
 
 	/**
@@ -214,6 +217,21 @@ class Notification extends BaseEntity
 		}
 
 		return $this->typeList;
+	}
+
+	/**
+	 * @return array
+	 */
+	private function getDefaultExpressions(): array
+	{
+		return [
+			'@yearly'   => '0 0 1 1 *',
+			'@annually' => '0 0 1 1 *',
+			'@monthly'  => '0 0 1 * *',
+			'@weekly'   => '0 0 * * 0',
+			'@daily'    => '0 0 * * *',
+			'@hourly'   => '0 * * * *',
+		];
 	}
 
 }

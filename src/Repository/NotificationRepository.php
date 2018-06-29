@@ -72,7 +72,7 @@ class NotificationRepository extends ServiceEntityRepository
 				->where('n.user = :user')
 				->setParameter('user', $user)
 				->addOrderBy('n.active', 'DESC')
-				->addOrderBy('n.dueDate', 'ASC')
+				//->addOrderBy('n.dueDate', 'ASC')
 				->setFirstResult($page * $limit - $limit)
 				->setMaxResults($limit)
 				->getQuery(),
