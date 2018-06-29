@@ -57,10 +57,10 @@ class Notification extends BaseEntity
 
 	/**
 	 * @var boolean
-	 * @ORM\Column(name="loop", type="boolean", nullable=false)
+	 * @ORM\Column(name="recurrent", type="boolean", nullable=false)
 	 * @Assert\Type("boolean")
 	 */
-	private $loop;
+	private $recurrent;
 
 	/**
 	 * @var string
@@ -80,9 +80,9 @@ class Notification extends BaseEntity
 	 * @throws \ReflectionException
 	 */
 	public function __construct(User $user, int $type)
-	{	$this->user   = $user;
-		$this->active = true;
-		$this->loop   = false;
+	{	$this->user     = $user;
+		$this->active    = true;
+		$this->recurrent = false;
 		$this->setType($type);
 	}
 
@@ -156,14 +156,14 @@ class Notification extends BaseEntity
 	/**
 	 * @return bool
 	 */
-	public function isLoop(): bool
+	public function isRecurrent(): bool
 	{
-		return $this->loop;
+		return $this->recurrent;
 	}
 
-	public function loopToggle(): void
+	public function recurrentToggle(): void
 	{
-		$this->loop = !$this->loop;
+		$this->recurrent = !$this->recurrent;
 	}
 
 	/**
