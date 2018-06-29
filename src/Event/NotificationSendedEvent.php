@@ -2,7 +2,7 @@
 
 namespace App\Event;
 
-use App\Entity\Notification;
+use App\Entity\NotificationQueuePosition;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
@@ -15,17 +15,17 @@ class NotificationSendedEvent extends Event
 	const NAME = 'notification.sended';
 
 	/**
-	 * @var Notification
+	 * @var NotificationQueuePosition
 	 */
-	protected $notification;
+	protected $queuePosition;
 
-	public function __construct(Notification $notification)
+	public function __construct(NotificationQueuePosition $queuePosition)
 	{
-		$this->notification = $notification;
+		$this->queuePosition = $queuePosition;
 	}
 
-	public function getNotification(): Notification
+	public function getNotificationQueuePosition(): NotificationQueuePosition
 	{
-		return $this->notification;
+		return $this->queuePosition;
 	}
 }

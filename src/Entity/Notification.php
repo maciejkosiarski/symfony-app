@@ -263,4 +263,18 @@ class Notification extends BaseEntity
 		return $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
 	}
 
+	/**
+	 * @return \DateTime
+	 */
+	public function getDateTimeNextRun(): \DateTime
+	{
+		$cronExpression = CronExpression::factory($this->intervalExpression);
+
+		$dudeDate = new \DateTime();
+		$dudeDate->setTimestamp($cronExpression->getNextRunDate()->getTimestamp());
+		$dudeDate->setTimezone($cronExpression->getNextRunDate()->getTimezone());
+
+		return $dudeDate;
+	}
+
 }

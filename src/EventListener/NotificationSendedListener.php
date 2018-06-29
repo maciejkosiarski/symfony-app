@@ -2,7 +2,9 @@
 
 namespace App\EventListener;
 
+use App\Entity\NotificationQueuePosition;
 use App\Event\NotificationSendedEvent;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -17,18 +19,43 @@ class NotificationSendedListener
 	 */
 	private $logger;
 
-	public function __construct(LoggerInterface $logger)
+	/**
+	 * @var EntityManagerInterface
+	 */
+	private $em;
+
+	public function __construct(LoggerInterface $logger, EntityManagerInterface $em)
 	{
 		$this->logger = $logger;
+		$this->em     = $em;
 	}
 
+	/**
+	 * @param NotificationSendedEvent $event
+	 * @throws \App\Exception\InvalidQueueStatusException
+	 * @throws \ReflectionException
+	 */
 	public function onNotificationSended(NotificationSendedEvent $event): void
 	{
-		$notification = $event->getNotification();
+		$queuePosition = $event->getNotificationQueuePosition();
 
 		$this->logger->info(sprintf(
 			'Notification id: %s successfully sended.',
-			$notification->getId())
+			$queuePosition->getNotification()->getId())
 		);
+
+		$queuePosition->setStatus(NotificationQueuePosition::STATUS_SENDED);
+
+
+		if ($queuePosition->getNotification()->isRecurrent()) {
+			$this->em->persist(
+				new NotificationQueuePosition(
+					$queuePosition->getNotification(),
+					$queuePosition->getNotification()->getDateTimeNextRun()
+				)
+			);
+		}
+
+		$this->em->flush();
 	}
 }

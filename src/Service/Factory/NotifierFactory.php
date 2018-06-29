@@ -20,11 +20,6 @@ class NotifierFactory
 	private $mailer;
 
 	/**
-	 * @var EntityManagerInterface
-	 */
-	private $em;
-
-	/**
 	 * @param $name
 	 * @return Notifier
 	 * @throws CreateNotifierException
@@ -45,7 +40,7 @@ class NotifierFactory
 	 */
 	private function createMailNotifier(): MailNotifier
 	{
-		return new MailNotifier($this->mailer, $this->em);
+		return new MailNotifier($this->mailer);
 	}
 
 	/**
@@ -56,14 +51,4 @@ class NotifierFactory
 	{
 		$this->mailer = $mailer;
 	}
-
-	/**
-	 * @param EntityManagerInterface $em
-	 * @required
-	 */
-	public function getEntityManager(EntityManagerInterface $em): void
-	{
-		$this->em = $em;
-	}
-
 }

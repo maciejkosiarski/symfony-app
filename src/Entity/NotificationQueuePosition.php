@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @package App\Entity
  * @ORM\Table(name="app_notification_queue_positions")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\NotificationQueuePositionRepository")
  * @ORM\HasLifecycleCallbacks()
  * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */

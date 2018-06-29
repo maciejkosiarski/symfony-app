@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Notification;
 use App\Exception\NotifyException;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class MailNotifier
@@ -19,19 +18,12 @@ class MailNotifier implements Notifier
 	private $mailer;
 
 	/**
-	 * @var EntityManagerInterface
-	 */
-	private $em;
-
-	/**
 	 * MailNotifier constructor.
 	 * @param \Swift_Mailer $mailer
-	 * @param EntityManagerInterface $em
 	 */
-	public function __construct(\Swift_Mailer $mailer, EntityManagerInterface $em)
+	public function __construct(\Swift_Mailer $mailer)
 	{
 		$this->mailer = $mailer;
-		$this->em = $em;
 	}
 
 	/**
@@ -46,8 +38,6 @@ class MailNotifier implements Notifier
 			->setBody($notification->getMessage());
 
 		$this->send($message);
-
-		$this->disableNotification($notification);
 	}
 
 	/**
@@ -67,15 +57,5 @@ class MailNotifier implements Notifier
 		if(0 === $this->mailer->send($message)){
 			throw new NotifyException(current($message->getTo()));
 		};
-	}
-
-	/**
-	 * @param Notification $notification
-	 */
-	private function disableNotification(Notification $notification): void
-	{
-		$notification->activeToggle();
-
-		$this->em->flush();
 	}
 }

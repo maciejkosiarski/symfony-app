@@ -31,9 +31,14 @@ services:
         arguments:
             $dispatcher: '@debug.event_dispatcher.inner'
 
+    App\EventListener\NotificationCreatedListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }
+
     App\EventListener\NotificationSendedListener:
         arguments:
             $logger: '@monolog.logger.notifications'
+            $em: '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: notification.sended }
 

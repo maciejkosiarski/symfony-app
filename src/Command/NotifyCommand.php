@@ -2,10 +2,10 @@
 
 namespace App\Command;
 
-use App\Entity\Notification;
+use App\Entity\NotificationQueuePosition;
 use App\Event\NotificationSendedEvent;
 use App\Event\NotificationSendedExceptionEvent;
-use App\Repository\NotificationRepository;
+use App\Repository\NotificationQueuePositionRepository;
 use App\Service\Factory\NotifierFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,7 +27,7 @@ class NotifyCommand extends Command
 	private $factory;
 
 	/**
-	 * @var NotificationRepository
+	 * @var NotificationQueuePositionRepository
 	 */
 	private $repository;
 
@@ -38,7 +38,7 @@ class NotifyCommand extends Command
 
 	public function __construct(
 		?string $name = null,
-		NotificationRepository $repository,
+		NotificationQueuePositionRepository $repository,
 		NotifierFactory $factory,
 		EventDispatcher $dispatcher
 	) {
@@ -66,25 +66,32 @@ class NotifyCommand extends Command
 	{
 		try{
 			$notifier = $this->factory->getNotifierByName($input->getArgument('notifier'));
-			/** @var Notification $notification */
-			foreach ($this->repository->getActiveByNotifier($notifier) as $notification) {
-				$notifier->notify($notification);
+			/** @var NotificationQueuePosition $queuePosition */
+			foreach ($this->repository->getActiveByNotifier($notifier) as $queuePosition) {
+				$notifier->notify($queuePosition->getNotification());
 
-				$this->dispatchSendedEvent($notification);
+				$this->dispatchSendedEvent($queuePosition);
 			}
 		} catch (\Exception $e) {
 			$this->dispatchSendedExceptionEvent($e, new ConsoleLogger($output));
 		}
 	}
 
-	private function dispatchSendedEvent(Notification $notification): void
+	/**
+	 * @param NotificationQueuePosition $queuePosition
+	 */
+	private function dispatchSendedEvent(NotificationQueuePosition $queuePosition): void
 	{
 		$this->dispatcher->dispatch(
 			NotificationSendedEvent::NAME,
-			new NotificationSendedEvent($notification)
+			new NotificationSendedEvent($queuePosition)
 		);
 	}
 
+	/**
+	 * @param \Exception    $e
+	 * @param ConsoleLogger $logger
+	 */
 	private function dispatchSendedExceptionEvent(\Exception $e, ConsoleLogger $logger): void
 	{
 		$this->dispatcher->dispatch(
