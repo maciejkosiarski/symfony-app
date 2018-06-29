@@ -1,2 +1,9 @@
 monolog:
     channels: ['notifications']
+
+    handlers:
+      # ...
+      console:
+        type:   console
+        process_psr_3_messages: false
+        channels: ['!notifications']

@@ -29,4 +29,17 @@ services:
 
     App\Command\NotifyCommand:
         arguments:
+            $dispatcher: '@debug.event_dispatcher.inner'
+
+    App\EventListener\NotificationSendedListener:
+        arguments:
             $logger: '@monolog.logger.notifications'
+        tags:
+            - { name: kernel.event_listener, event: notification.sended }
+
+    App\EventListener\NotificationSendedExceptionListener:
+        arguments:
+            $logger: '@monolog.logger.notifications'
+        tags:
+            - { name: kernel.event_listener, event: notification.sended.exception }
+
