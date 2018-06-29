@@ -89,6 +89,9 @@
     "monolog/monolog": {
         "version": "1.23.0"
     },
+    "mtdowling/cron-expression": {
+        "version": "v1.2.1"
+    },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },

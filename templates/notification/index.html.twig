@@ -39,7 +39,7 @@
                             {{ notification.active ? 'Yes' : 'No' }}
                         </a>
                     </td>
-                    <td>{{ notification.intervalExpression }}</td>
+                    <td>{{ notification.nextRun }}</td>
                     <td>
                         <a class="btn btn-outline-primary" href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
                         <a class="btn btn-outline-primary" href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>

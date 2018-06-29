@@ -4,6 +4,7 @@
 namespace App\Entity;
 
 use App\Exception\InvalidNotificationTypeException;
+use Cron\CronExpression;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -232,6 +233,26 @@ class Notification extends BaseEntity
 			'@daily'    => '0 0 * * *',
 			'@hourly'   => '0 * * * *',
 		];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPreviousRun(): string
+	{
+		$cronExpression = CronExpression::factory($this->intervalExpression);
+
+		return $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getNextRun(): string
+	{
+		$cronExpression = CronExpression::factory($this->intervalExpression);
+
+		return $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
 	}
 
 }
