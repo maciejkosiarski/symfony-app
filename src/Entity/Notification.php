@@ -5,6 +5,7 @@ namespace App\Entity;
 
 use App\Exception\InvalidNotificationTypeException;
 use Cron\CronExpression;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -72,6 +73,11 @@ class Notification extends BaseEntity
 	private $intervalExpression;
 
 	/**
+	 * @ORM\OneToMany(targetEntity="App\Entity\NotificationQueuePosition", mappedBy="notification")
+	 */
+	private $queuePositions;
+
+	/**
 	 * Notification constructor.
 	 *
 	 * @param User $user
@@ -80,9 +86,11 @@ class Notification extends BaseEntity
 	 * @throws \ReflectionException
 	 */
 	public function __construct(User $user, int $type)
-	{	$this->user     = $user;
-		$this->active    = true;
-		$this->recurrent = false;
+	{
+		$this->queuePositions = new ArrayCollection();
+		$this->user           = $user;
+		$this->active         = true;
+		$this->recurrent      = true;
 		$this->setType($type);
 	}
 
