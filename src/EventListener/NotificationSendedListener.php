@@ -54,6 +54,8 @@ class NotificationSendedListener
 					$queuePosition->getNotification()->getDateTimeNextRun()
 				)
 			);
+		} else {
+			$queuePosition->getNotification()->activeToggle();
 		}
 
 		$this->em->flush();

@@ -30,16 +30,22 @@ class NotificationController extends Controller
 	 * @param int $page
 	 * @param int $limit
 	 * @return Response
+	 * @throws \ReflectionException
 	 */
     public function index(NotificationRepository $notificationRepository, int $page, int $limit): Response
     {
 		$paginator = $notificationRepository->findPaginateByUser($page, $limit,$this->getUser());
 
+		$notificationTypes = array_map(function ($type) {
+			return strtolower(str_replace('TYPE_', '', $type));
+		}, array_flip((new Notification())->getTypeList()));
+
 		return $this->render('notification/index.html.twig', [
 			'notifications' => $paginator->getIterator(),
-			'totalPages'   => ceil($paginator->count() / $limit),
-			'currentPage'  => $page,
-			'limit'        => $limit,
+			'types'			=> $notificationTypes,
+			'totalPages'    => ceil($paginator->count() / $limit),
+			'currentPage'   => $page,
+			'limit'         => $limit,
 		]);
     }
 
@@ -47,12 +53,12 @@ class NotificationController extends Controller
      * @Route("/new", name="notification_new", methods="GET|POST")
 	 * @param Request $request
 	 * @return Response
-	 * @throws \App\Exception\InvalidNotificationTypeException
-	 * @throws \ReflectionException
 	 */
     public function new(Request $request): Response
     {
-        $notification = new Notification($this->getUser(), Notification::TYPE_EMAIL);
+        $notification = new Notification();
+		$notification->setUser($this->getUser());
+
         $form = $this->createForm(NotificationType::class, $notification);
         $form->handleRequest($request);
 
@@ -157,4 +163,20 @@ class NotificationController extends Controller
 
 		return $this->redirectToRoute('notification_index');
     }
+
+	/**
+	 * @Route("/{id}/toggle/recurrent", name="notification_toggle_recurrent", methods="GET")
+	 * @param Notification $notification
+	 * @return Response
+	 */
+	public function recurrentToggle(Notification $notification): Response
+	{
+		$notification->recurrentToggle();
+
+		$em = $this->getDoctrine()->getManager();
+
+		$em->flush();
+
+		return $this->redirectToRoute('notification_index');
+	}
 }

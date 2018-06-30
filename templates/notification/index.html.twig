@@ -24,6 +24,7 @@
                     <th>Type</th>
                     <th>Message</th>
                     <th>Active</th>
+                    <th>Recurrent</th>
                     <th>Next run</th>
                     <th>links</th>
                     <th>actions</th>
@@ -31,12 +32,17 @@
             </thead>
             <tbody>
             {% for notification in notifications %}
-                <tr>
-                    <td>{{ notification.type }}</td>
+                <tr class="{{ notification.active ? 'table-primary' : 'table-secondary' }}">
+                    <td>{{ types[notification.type] }}</td>
                     <td>{{ notification.message }}</td>
                     <td>
                         <a href="{{ path('notification_toggle_active', {'id': notification.id}) }}">
                             {{ notification.active ? 'Yes' : 'No' }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('notification_toggle_recurrent', {'id': notification.id}) }}">
+                            {{ notification.recurrent ? 'Yes' : 'No' }}
                         </a>
                     </td>
                     <td>{{ notification.nextRun }}</td>

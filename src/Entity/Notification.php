@@ -20,8 +20,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Notification extends BaseEntity
 {
-	const TYPE_BROWSER = 1;
-	const TYPE_EMAIL   = 2;
+	const TYPE_EMAIL   = 1;
+	const TYPE_BROWSER = 2;
 	const TYPE_SMS 	   = 3;
 
 	/**
@@ -77,21 +77,11 @@ class Notification extends BaseEntity
 	 */
 	private $queuePositions;
 
-	/**
-	 * Notification constructor.
-	 *
-	 * @param User $user
-	 * @param int  $type
-	 * @throws InvalidNotificationTypeException
-	 * @throws \ReflectionException
-	 */
-	public function __construct(User $user, int $type)
+	public function __construct()
 	{
 		$this->queuePositions = new ArrayCollection();
-		$this->user           = $user;
 		$this->active         = true;
 		$this->recurrent      = true;
-		$this->setType($type);
 	}
 
 	/**
@@ -113,7 +103,7 @@ class Notification extends BaseEntity
 	/**
 	 * @return string
 	 */
-	public function getType(): string
+	public function getType(): ?string
 	{
 		return $this->type;
 	}
@@ -159,6 +149,14 @@ class Notification extends BaseEntity
 	public function activeToggle(): void
 	{
 		$this->active = !$this->active;
+	}
+
+	/**
+	 * @param bool $bool
+	 */
+	public function setRecurrent(bool $bool)
+	{
+		$this->recurrent = $bool;
 	}
 
 	/**
@@ -213,7 +211,7 @@ class Notification extends BaseEntity
 	 * @return int[]
 	 * @throws \ReflectionException
 	 */
-	private function getTypeList(): array
+	public function getTypeList(): array
 	{
 		if (empty($this->typeList)) {
 			$reflection = new \ReflectionClass(Notification::class);
@@ -276,5 +274,4 @@ class Notification extends BaseEntity
 
 		return $dudeDate;
 	}
-
 }

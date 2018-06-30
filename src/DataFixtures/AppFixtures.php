@@ -58,10 +58,12 @@ class AppFixtures extends Fixture
 				$manager->persist(new Role($user, $role));
 			}
 
-			foreach ($this->getNotificationsData() as [$type, $message, $dueDate]) {
-				$notification = new Notification($user, $type);
+			foreach ($this->getNotificationsData() as [$type, $message, $intervalExpression]) {
+				$notification = new Notification();
+				$notification->setUser($user);
+				$notification->setType($type);
 				$notification->setMessage($message);
-				$notification->setDueDate($dueDate);
+				$notification->setIntervalExpression($intervalExpression);
 
 				$manager->persist($notification);
 
@@ -93,7 +95,7 @@ class AppFixtures extends Fixture
 	private function getNotificationsData(): array
 	{
 		return [
-			[2, 'test notification', new \DateTime()],
+			[2, 'test notification', '0 * * * *'],
 		];
 	}
 
