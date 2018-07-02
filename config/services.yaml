@@ -29,7 +29,7 @@ services:
 
     App\Command\NotifyCommand:
         arguments:
-            $dispatcher: '@debug.event_dispatcher.inner'
+            $dispatcher: '@event_dispatcher'
 
     App\EventListener\NotificationCreatedListener:
         tags:

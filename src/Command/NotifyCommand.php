@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class NotifyCommand
@@ -32,7 +32,7 @@ class NotifyCommand extends Command
 	private $repository;
 
 	/**
-	 * @var EventDispatcher
+	 * @var EventDispatcherInterface
 	 */
 	private $dispatcher;
 
@@ -40,7 +40,7 @@ class NotifyCommand extends Command
 		?string $name = null,
 		NotificationQueuePositionRepository $repository,
 		NotifierFactory $factory,
-		EventDispatcher $dispatcher
+		EventDispatcherInterface $dispatcher
 	) {
 		$this->repository = $repository;
 		$this->factory    = $factory;
