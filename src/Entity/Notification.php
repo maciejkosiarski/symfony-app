@@ -274,4 +274,15 @@ class Notification extends BaseEntity
 
 		return $dudeDate;
 	}
+
+	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function getTypesLabels()
+	{
+		return array_map(function ($type) {
+			return strtolower(str_replace('TYPE_', '', $type));
+		}, array_flip($this->getTypeList()));
+	}
 }

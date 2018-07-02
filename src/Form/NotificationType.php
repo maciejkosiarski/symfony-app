@@ -19,11 +19,9 @@ class NotificationType extends AbstractType
 	 */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-    	$notification = new Notification();
-
         $builder
             ->add('type', ChoiceType::class, [
-            	'choices' => $notification->getTypeList(),
+            	'choices' => array_flip((new Notification())->getTypesLabels()),
 			])
             ->add('message', TextType::class)
             ->add('intervalExpression', TextType::class)

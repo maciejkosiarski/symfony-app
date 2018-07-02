@@ -36,13 +36,9 @@ class NotificationController extends Controller
     {
 		$paginator = $notificationRepository->findPaginateByUser($page, $limit,$this->getUser());
 
-		$notificationTypes = array_map(function ($type) {
-			return strtolower(str_replace('TYPE_', '', $type));
-		}, array_flip((new Notification())->getTypeList()));
-
 		return $this->render('notification/index.html.twig', [
 			'notifications' => $paginator->getIterator(),
-			'types'			=> $notificationTypes,
+			'types'			=> (new Notification())->getTypesLabels(),
 			'totalPages'    => ceil($paginator->count() / $limit),
 			'currentPage'   => $page,
 			'limit'         => $limit,
