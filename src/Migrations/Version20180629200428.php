@@ -22,7 +22,6 @@ class Version20180629200428 extends AbstractMigration
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE app_notifications RENAME COLUMN recurrent TO loop');
     }
 }
