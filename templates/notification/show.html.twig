@@ -63,7 +63,15 @@
             </thead>
             <tbody>
             {% for position in notification.queuePositions %}
-                <tr class="{{ notification.active ? 'table-primary' : 'table-secondary' }}">
+                <tr class="
+                    {% if position.status == 1 %}
+                        table-primary
+                    {% elseif position.status == 2 %}
+                        table-success
+                    {% else %}
+                        table-danger
+                    {% endif %}
+                ">
                     <td>{{ statusLabels[position.status] }}</td>
                     <td>{{ position.dueDate? position.dueDate|date('Y-m-d H:i:s') : '' }}</td>
                     <td>{{ position.createdAt ? position.createdAt|date('Y-m-d H:i:s') : '' }}</td>

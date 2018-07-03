@@ -51,7 +51,7 @@ class NotificationSendedListener
 			$newQueuePosition->setNotification($queuePosition->getNotification());
 			$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeNextRun());
 
-			if ($queuePosition->getNotification()->getDateTimeNextRun() === $queuePosition->getDueDate()) {
+			if ($newQueuePosition->getDueDate() === $queuePosition->getDueDate()) {
 				$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeSpecificNextRun(2));
 			}
 
@@ -61,5 +61,6 @@ class NotificationSendedListener
 		}
 
 		$this->em->flush();
+		$this->em->clear();
 	}
 }
