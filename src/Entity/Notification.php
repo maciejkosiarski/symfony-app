@@ -7,6 +7,7 @@ use App\Exception\InvalidNotificationTypeException;
 use Cron\CronExpression;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -191,6 +192,14 @@ class Notification extends BaseEntity
 	}
 
 	/**
+	 * @return PersistentCollection
+	 */
+	public function getQueuePositions(): PersistentCollection
+	{
+		return $this->queuePositions;
+	}
+
+	/**
 	 * @param int $type
 	 * @return bool
 	 * @throws \InvalidArgumentException
@@ -271,6 +280,19 @@ class Notification extends BaseEntity
 		$dudeDate = new \DateTime();
 		$dudeDate->setTimestamp($cronExpression->getNextRunDate()->getTimestamp());
 		$dudeDate->setTimezone($cronExpression->getNextRunDate()->getTimezone());
+
+		return $dudeDate;
+	}
+
+	public function getDateTimeSecondNextRun(): \DateTime
+	{
+		$cronExpression = CronExpression::factory($this->intervalExpression);
+		/** @var \DateTime[] $runDates */
+		$runDates  = $cronExpression->getMultipleRunDates(2);
+
+		$dudeDate = new \DateTime();
+		$dudeDate->setTimestamp($runDates[1]->getTimestamp());
+		$dudeDate->setTimezone($runDates[1]->getTimezone());
 
 		return $dudeDate;
 	}
