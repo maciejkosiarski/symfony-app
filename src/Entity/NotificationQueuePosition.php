@@ -47,17 +47,10 @@ class NotificationQueuePosition extends BaseEntity
 	 */
 	private $dueDate;
 
-	/**
-	 * NotificationQueuePosition constructor.
-	 *
-	 * @param Notification $notification
-	 * @param \DateTime $dueDate
-	 */
-	public function __construct(Notification $notification, \DateTime $dueDate)
+
+	public function __construct()
 	{
-		$this->notification = $notification;
-		$this->dueDate      = $dueDate;
-		$this->status       = self::STATUS_PENDING;
+		$this->status = self::STATUS_PENDING;
 	}
 
 	/**
@@ -66,6 +59,14 @@ class NotificationQueuePosition extends BaseEntity
 	public function getNotification(): Notification
 	{
 		return $this->notification;
+	}
+
+	/**
+	 * @param Notification $notification
+	 */
+	public function setNotification(Notification $notification)
+	{
+		$this->notification = $notification;
 	}
 
 	/**
@@ -96,6 +97,14 @@ class NotificationQueuePosition extends BaseEntity
 	public function getDueDate(): \DateTime
 	{
 		return $this->dueDate;
+	}
+
+	/**
+	 * @param \DateTime $dueDate
+	 */
+	public function setDueDate(\DateTime $dueDate)
+	{
+		$this->dueDate = $dueDate;
 	}
 
 	/**
@@ -131,5 +140,16 @@ class NotificationQueuePosition extends BaseEntity
 		}
 
 		return $this->statusList;
+	}
+
+	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function getStatusLabels()
+	{
+		return array_map(function ($status) {
+			return strtolower(str_replace('STATUS_', '', $status));
+		}, array_flip($this->getStatusList()));
 	}
 }

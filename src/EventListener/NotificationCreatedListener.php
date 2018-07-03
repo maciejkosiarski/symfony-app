@@ -34,7 +34,11 @@ class NotificationCreatedListener
 		$dudeDate = new \DateTime('@' . $cronExpression->getNextRunDate()->getTimestamp());
 		$dudeDate ->setTimezone($cronExpression->getNextRunDate()->getTimezone());
 
-		$em->persist(new NotificationQueuePosition($entity, $dudeDate));
+		$queuePosition = new NotificationQueuePosition();
+		$queuePosition->setNotification($entity);
+		$queuePosition->setDueDate($dudeDate);
+
+		$em->persist($queuePosition);
 
 		$em->flush();
 	}

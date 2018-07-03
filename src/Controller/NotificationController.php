@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Notification;
+use App\Entity\NotificationQueuePosition;
 use App\Form\NotificationType;
 use App\Repository\NotificationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -81,10 +82,14 @@ class NotificationController extends Controller
      * @Route("/{id}", name="notification_show", methods="GET")
 	 * @param Notification $notification
 	 * @return Response
+	 * @throws \ReflectionException
 	 */
     public function show(Notification $notification): Response
     {
-        return $this->render('notification/show.html.twig', ['notification' => $notification]);
+        return $this->render('notification/show.html.twig', [
+        	'notification' => $notification,
+			'statusLabels' => (new NotificationQueuePosition())->getStatusLabels(),
+		]);
     }
 
     /**

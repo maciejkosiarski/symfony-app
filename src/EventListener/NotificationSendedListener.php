@@ -46,14 +46,12 @@ class NotificationSendedListener
 
 		$queuePosition->setStatus(NotificationQueuePosition::STATUS_SENDED);
 
-
 		if ($queuePosition->getNotification()->isRecurrent()) {
-			$this->em->persist(
-				new NotificationQueuePosition(
-					$queuePosition->getNotification(),
-					$queuePosition->getNotification()->getDateTimeNextRun()
-				)
-			);
+			$queuePosition = new NotificationQueuePosition();
+			$queuePosition->setNotification($queuePosition->getNotification());
+			$queuePosition->setDueDate($queuePosition->getNotification()->getDateTimeNextRun());
+
+			$this->em->persist($queuePosition);
 		} else {
 			$queuePosition->getNotification()->activeToggle();
 		}

@@ -47,4 +47,34 @@
     <a href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
 
     {{ include('notification/_delete_form.html.twig') }}
+
+    <hr>
+
+    <h2>History</h2>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="thead-light">
+            <tr>
+                <th>Status</th>
+                <th>Due date</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for position in notification.queuePositions %}
+                <tr class="{{ notification.active ? 'table-primary' : 'table-secondary' }}">
+                    <td>{{ statusLabels[position.status] }}</td>
+                    <td>{{ position.dueDate? position.dueDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ position.createdAt ? position.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ position.updatedAt ? position.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
