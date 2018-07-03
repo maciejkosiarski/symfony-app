@@ -51,11 +51,16 @@ class NotificationSendedListener
 			$newQueuePosition->setNotification($queuePosition->getNotification());
 			$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeNextRun());
 
-			if ($newQueuePosition->getDueDate() === $queuePosition->getDueDate()) {
+			if ($newQueuePosition->getDueDate()->getTimestamp() <= $queuePosition->getDueDate()->getTimestamp()) {
 				$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeSpecificNextRun(2));
 			}
 
 			$this->em->persist($newQueuePosition);
+
+			$this->logger->info(sprintf(
+				'Notification id: %s added to queue.',
+				$queuePosition->getNotification()->getId())
+			);
 		} else {
 			$queuePosition->getNotification()->activeToggle();
 		}
