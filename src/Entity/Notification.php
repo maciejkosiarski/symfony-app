@@ -75,6 +75,7 @@ class Notification extends BaseEntity
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\NotificationQueuePosition", mappedBy="notification")
+	 * @ORM\OrderBy({"created_at" = "DESC"})
 	 */
 	private $queuePositions;
 
