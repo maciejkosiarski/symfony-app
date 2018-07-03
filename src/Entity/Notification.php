@@ -75,7 +75,7 @@ class Notification extends BaseEntity
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\NotificationQueuePosition", mappedBy="notification")
-	 * @ORM\OrderBy({"created_at" = "DESC"})
+	 * @ORM\OrderBy({"createdAt" = "DESC"})
 	 */
 	private $queuePositions;
 
@@ -285,15 +285,15 @@ class Notification extends BaseEntity
 		return $dudeDate;
 	}
 
-	public function getDateTimeSecondNextRun(): \DateTime
+	public function getDateTimeSpecificNextRun($run): \DateTime
 	{
 		$cronExpression = CronExpression::factory($this->intervalExpression);
 		/** @var \DateTime[] $runDates */
-		$runDates  = $cronExpression->getMultipleRunDates(2);
+		$runDates  = $cronExpression->getMultipleRunDates($run);
 
 		$dudeDate = new \DateTime();
-		$dudeDate->setTimestamp($runDates[1]->getTimestamp());
-		$dudeDate->setTimezone($runDates[1]->getTimezone());
+		$dudeDate->setTimestamp($runDates[$run - 1]->getTimestamp());
+		$dudeDate->setTimezone($runDates[$run - 1]->getTimezone());
 
 		return $dudeDate;
 	}

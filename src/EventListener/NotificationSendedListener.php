@@ -47,11 +47,15 @@ class NotificationSendedListener
 		$queuePosition->setStatus(NotificationQueuePosition::STATUS_SENDED);
 
 		if ($queuePosition->getNotification()->isRecurrent()) {
-			$queuePosition = new NotificationQueuePosition();
-			$queuePosition->setNotification($queuePosition->getNotification());
-			$queuePosition->setDueDate($queuePosition->getNotification()->getDateTimeNextRun());
+			$newQueuePosition = new NotificationQueuePosition();
+			$newQueuePosition->setNotification($queuePosition->getNotification());
+			$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeNextRun());
 
-			$this->em->persist($queuePosition);
+			if ($queuePosition->getNotification()->getDateTimeNextRun() === $queuePosition->getDueDate()) {
+				$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeSpecificNextRun(2));
+			}
+
+			$this->em->persist($newQueuePosition);
 		} else {
 			$queuePosition->getNotification()->activeToggle();
 		}
