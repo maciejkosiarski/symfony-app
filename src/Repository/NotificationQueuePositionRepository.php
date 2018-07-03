@@ -30,7 +30,9 @@ class NotificationQueuePositionRepository extends ServiceEntityRepository
 		return new ArrayCollection(
 			$this->createQueryBuilder('nqp')
 				->leftJoin('nqp.notification', 'n' )
-				->where('n.active = :active')
+				->where('nqp.status = :status')
+				->setParameter('status', NotificationQueuePosition::STATUS_PENDING)
+				->andwhere('n.active = :active')
 				->setParameter('active', true)
 				->andWhere('n.type = :type')
 				->setParameter('type', $notifier->getNotificationType())
