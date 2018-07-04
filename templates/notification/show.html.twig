@@ -5,6 +5,14 @@
 {% block body %}
     <h1>Notification</h1>
 
+    <div class="btn-group">
+        <a href="{{ path('notification_index') }}" class="btn btn-outline-primary">back to list</a>
+        <a href="{{ path('notification_edit', {'id': notification.id}) }}" class="btn btn-outline-primary">edit</a>
+    </div>
+
+    <br>
+    <br>
+
     <table class="table">
         <tbody>
             <tr>
@@ -41,10 +49,6 @@
             </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('notification_index') }}">back to list</a>
-
-    <a href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>
 
     {{ include('notification/_delete_form.html.twig') }}
 
