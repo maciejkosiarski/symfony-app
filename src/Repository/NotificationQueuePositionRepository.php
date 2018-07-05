@@ -38,7 +38,7 @@ class NotificationQueuePositionRepository extends ServiceEntityRepository
 				->setParameter('type', $notifier->getNotificationType())
 				->andWhere('nqp.dueDate < :dueDate')
 				->setParameter('dueDate', new \DateTime('now'))
-				->orderBy('nqp.createdAt', 'DESC')
+				->orderBy('nqp.createdAt', 'ASC')
 				->getQuery()
 				->getResult()
 		);
