@@ -47,15 +47,13 @@ class NotificationSendedListener
 		$queuePosition->setStatus(NotificationQueuePosition::STATUS_SENDED);
 
 		if ($queuePosition->getNotification()->isRecurrent()) {
-			$newQueuePosition = new NotificationQueuePosition();
-			$newQueuePosition->setNotification($queuePosition->getNotification());
-			$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeNextRun());
+			$dueDate = $queuePosition->getNotification()->getDateTimeNextRun();
 
-			if ($newQueuePosition->getDueDate()->getTimestamp() <= $queuePosition->getDueDate()->getTimestamp()) {
-				$newQueuePosition->setDueDate($queuePosition->getNotification()->getDateTimeSpecificNextRun(2));
+			if ($dueDate->getTimestamp() <= $queuePosition->getDueDate()->getTimestamp()) {
+				$dueDate = $queuePosition->getNotification()->getDateTimeSpecificNextRun(2);
 			}
 
-			$this->em->persist($newQueuePosition);
+			$queuePosition->getNotification()->addToQueue($dueDate);
 
 			$this->logger->info(sprintf(
 				'Notification id: %s added to queue.',

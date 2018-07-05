@@ -74,7 +74,7 @@ class Notification extends BaseEntity
 	private $intervalExpression;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="App\Entity\NotificationQueuePosition", mappedBy="notification")
+	 * @ORM\OneToMany(targetEntity="App\Entity\NotificationQueuePosition", mappedBy="notification", cascade={"persist", "remove"})
 	 * @ORM\OrderBy({"createdAt" = "DESC"})
 	 */
 	private $queuePositions;
@@ -198,6 +198,15 @@ class Notification extends BaseEntity
 	public function getQueuePositions(): PersistentCollection
 	{
 		return $this->queuePositions;
+	}
+
+	public function addToQueue(\DateTime $dueDate)
+	{
+		$newQueuePosition = new NotificationQueuePosition();
+		$newQueuePosition->setNotification($this);
+		$newQueuePosition->setDueDate($dueDate);
+
+		$this->queuePositions->add($newQueuePosition);
 	}
 
 	/**
