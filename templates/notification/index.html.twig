@@ -26,6 +26,7 @@
                     <th>Active</th>
                     <th>Recurrent</th>
                     <th>Next run</th>
+                    <th>Created at</th>
                     <th>links</th>
                     <th>actions</th>
                 </tr>
@@ -46,6 +47,7 @@
                         </a>
                     </td>
                     <td>{{ notification.nextRun }}</td>
+                    <td>{{ notification.createdAt ? notification.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                     <td>
                         <a class="btn btn-outline-primary" href="{{ path('notification_show', {'id': notification.id}) }}">show</a>
                         <a class="btn btn-outline-primary" href="{{ path('notification_edit', {'id': notification.id}) }}">edit</a>

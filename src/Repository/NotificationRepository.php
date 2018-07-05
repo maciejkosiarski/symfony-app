@@ -74,6 +74,7 @@ class NotificationRepository extends ServiceEntityRepository
 				->addOrderBy('n.active', 'DESC')
 				//->addOrderBy('n.dueDate', 'ASC')
 				->setFirstResult($page * $limit - $limit)
+				->orderBy('n.createdAt', 'DESC')
 				->setMaxResults($limit)
 				->getQuery(),
 			$fetchJoinCollection = true
