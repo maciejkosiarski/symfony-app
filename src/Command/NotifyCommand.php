@@ -75,7 +75,7 @@ class NotifyCommand extends Command
 
 			$notifier = $this->factory->getNotifierByName($input->getArgument('notifier'));
 			/** @var NotificationQueuePosition $queuePosition */
-			foreach ($this->repository->getActiveByNotifier($notifier) as $queuePosition) {
+			foreach ($this->repository->getQueueToSendByNotifier($notifier) as $queuePosition) {
 				$notifier->notify($queuePosition->getNotification());
 
 				$this->dispatchSendedEvent($queuePosition);

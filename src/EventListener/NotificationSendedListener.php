@@ -64,6 +64,5 @@ class NotificationSendedListener
 		}
 
 		$this->em->flush();
-		$this->em->clear();
 	}
 }

@@ -25,7 +25,7 @@ class NotificationQueuePositionRepository extends ServiceEntityRepository
 	 * @param Notifier $notifier
 	 * @return ArrayCollection
 	 */
-	public function getActiveByNotifier(Notifier $notifier): ArrayCollection
+	public function getQueueToSendByNotifier(Notifier $notifier): ArrayCollection
 	{
 		return new ArrayCollection(
 			$this->createQueryBuilder('nqp')
