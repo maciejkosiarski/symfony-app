@@ -48,3 +48,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: notification.sended.exception }
 
+    App\EventListener\NotificationBlockedListener:
+        arguments:
+            $logger: '@monolog.logger.notifications'
+            $em: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: kernel.event_listener, event: notification.blocked }

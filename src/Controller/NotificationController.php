@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Notification;
 use App\Entity\NotificationQueuePosition;
+use App\Event\NotificationBlockedEvent;
 use App\Form\NotificationType;
 use App\Repository\NotificationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -152,15 +154,23 @@ class NotificationController extends Controller
 	/**
 	 * @Route("/{id}/toggle/active", name="notification_toggle_active", methods="GET")
 	 * @param Notification $notification
+	 * @param EventDispatcherInterface $dispatcher
 	 * @return Response
 	 */
-	public function activeToggle(Notification $notification): Response
+	public function activeToggle(Notification $notification, EventDispatcherInterface $dispatcher): Response
 	{
 		$notification->activeToggle();
 
 		$em = $this->getDoctrine()->getManager();
 
 		$em->flush();
+
+		if (!$notification->isActive()) {
+			$dispatcher->dispatch(
+				NotificationBlockedEvent::NAME,
+				new NotificationBlockedEvent($notification)
+			);
+		}
 
 		return $this->redirectToRoute('notification_index');
     }
