@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Notification;
 use App\Entity\NotificationQueuePosition;
+use App\Event\NotificationActivatedEvent;
 use App\Event\NotificationBlockedEvent;
 use App\Form\NotificationType;
 use App\Repository\NotificationRepository;
@@ -165,12 +166,7 @@ class NotificationController extends Controller
 
 		$em->flush();
 
-		if (!$notification->isActive()) {
-			$dispatcher->dispatch(
-				NotificationBlockedEvent::NAME,
-				new NotificationBlockedEvent($notification)
-			);
-		}
+		$this->activeToggleDispatch($notification, $dispatcher);
 
 		return $this->redirectToRoute('notification_index');
     }
@@ -189,5 +185,24 @@ class NotificationController extends Controller
 		$em->flush();
 
 		return $this->redirectToRoute('notification_index');
+	}
+
+	/**
+	 * @param Notification             $notification
+	 * @param EventDispatcherInterface $dispatcher
+	 */
+	private function activeToggleDispatch(Notification $notification, EventDispatcherInterface $dispatcher)
+	{
+		if ($notification->isActive()) {
+			$dispatcher->dispatch(
+				NotificationActivatedEvent::NAME,
+				new NotificationActivatedEvent($notification)
+			);
+		} else {
+			$dispatcher->dispatch(
+				NotificationBlockedEvent::NAME,
+				new NotificationBlockedEvent($notification)
+			);
+		}
 	}
 }
