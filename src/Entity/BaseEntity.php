@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class BaseEntity
 {
+	use DataLoader;
+	
 	/**
 	 * @ORM\Column(name="id", type="integer", nullable=false)
 	 * @ORM\Id
