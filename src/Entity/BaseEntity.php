@@ -13,7 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class BaseEntity
 {
 	use DataLoader;
-	
+	use RawLoader;
+
 	/**
 	 * @ORM\Column(name="id", type="integer", nullable=false)
 	 * @ORM\Id
