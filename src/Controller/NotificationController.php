@@ -24,7 +24,7 @@ class NotificationController extends Controller
 	/**
 	 * @Route("/all/{page}/{limit}",name="notification_index",methods="GET",defaults={
 	 *  	"page"=1,
-	 *  	"limit"=5
+	 *  	"limit"=25
 	 *	},
 	 *  requirements={
 	 *		"page"="\d+",

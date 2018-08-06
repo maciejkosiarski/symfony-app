@@ -1,6 +1,6 @@
 <div class="btn-group float-right">
     <span class="btn btn-outline-primary disabled">Per page</span>
-    <a href="{{ url('notification_index', {'page': currentPage, 'limit': 5}) }}" class="btn btn-outline-primary {% if limit == 5 %} disabled {% endif %}">5</a>
-    <a href="{{ url('notification_index', {'page': currentPage, 'limit': 10}) }}" class="btn btn-outline-primary {% if limit == 10 %} disabled {% endif %}">10</a>
     <a href="{{ url('notification_index', {'page': currentPage, 'limit': 25}) }}" class="btn btn-outline-primary {% if limit == 25 %} disabled {% endif %}">25</a>
+    <a href="{{ url('notification_index', {'page': currentPage, 'limit': 50}) }}" class="btn btn-outline-primary {% if limit == 50 %} disabled {% endif %}">50</a>
+    <a href="{{ url('notification_index', {'page': currentPage, 'limit': 100}) }}" class="btn btn-outline-primary {% if limit == 100 %} disabled {% endif %}">100</a>
 </div>
