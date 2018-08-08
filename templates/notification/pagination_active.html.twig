@@ -1,0 +1,62 @@
+<nav aria-label="...">
+    <ul class="pagination">
+        <li class="page-item {% if currentPage == 1 %} disabled {% endif %}">
+            <a class="page-link" href="{{ url('notification_list_active', {'page': 1, 'limit': limit}) }}">First</a>
+        </li>
+
+        <li class="page-item {% if currentPage == 1 %} disabled {% endif %}">
+            <a class="page-link" href="{{ url('notification_list_active', {'page': currentPage - 1, 'limit': limit}) }}">Previous</a>
+        </li>
+
+        {% if currentPage > 3 %}
+
+            <li class="page-item"><a class="page-link" href="{{ url('notification_list_active', {'page': currentPage - 3, 'limit': limit}) }}">{{ currentPage - 3 }}</a></li>
+
+        {% endif %}
+
+        {% if currentPage > 2 %}
+
+            <li class="page-item"><a class="page-link" href="{{ url('notification_list_active', {'page': currentPage - 2, 'limit': limit}) }}">{{ currentPage - 2 }}</a></li>
+
+        {% endif %}
+
+        {% if currentPage != 1 %}
+
+            <li class="page-item"><a class="page-link" href="{{ url('notification_list_active', {'page': currentPage - 1, 'limit': limit}) }}">{{ currentPage - 1 }}</a></li>
+
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+            {{ currentPage }}
+            <span class="sr-only">(current)</span>
+        </span>
+        </li>
+
+        {% if currentPage < totalPages %}
+
+            <li class="page-item"><a class="page-link" href="{{ url('notification_list_active', {'page': currentPage + 1, 'limit': limit}) }}">{{ currentPage + 1 }}</a></li>
+
+        {% endif %}
+
+        {% if currentPage + 1 < totalPages %}
+
+            <li class="page-item"><a class="page-link" href="{{ url('notification_list_active', {'page': currentPage + 2, 'limit': limit}) }}">{{ currentPage + 2 }}</a></li>
+
+        {% endif %}
+
+        {% if currentPage + 2 < totalPages %}
+
+            <li class="page-item"><a class="page-link" href="{{ url('notification_list_active', {'page': currentPage + 3, 'limit': limit}) }}">{{ currentPage + 3 }}</a></li>
+
+        {% endif %}
+
+        <li class="page-item {% if currentPage == totalPages %} disabled {% endif %}">
+            <a class="page-link" href="{{ url('notification_list_active', {'page': currentPage + 1, 'limit': limit}) }}">Next</a>
+        </li>
+
+        <li class="page-item {% if currentPage == totalPages %} disabled {% endif %}">
+            <a class="page-link" href="{{ url('notification_list_active', {'page': totalPages, 'limit': limit}) }}">Last</a>
+        </li>
+    </ul>
+</nav>

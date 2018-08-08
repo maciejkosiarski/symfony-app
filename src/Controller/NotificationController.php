@@ -7,6 +7,7 @@ use App\Entity\NotificationQueuePosition;
 use App\Event\NotificationActivatedEvent;
 use App\Event\NotificationBlockedEvent;
 use App\Form\NotificationType;
+use App\Repository\NotificationQueuePositionRepository;
 use App\Repository\NotificationRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -47,6 +48,34 @@ class NotificationController extends Controller
 			'currentPage'   => $page,
 			'limit'         => $limit,
 		]);
+    }
+
+    /**
+     * @Route("/active/{page}/{limit}",name="notification_list_active",methods="GET",defaults={
+     *  	"page"=1,
+     *  	"limit"=25
+     *	},
+     *  requirements={
+     *		"page"="\d+",
+     * 		"limit"="\d+"
+     *  })
+     * @param NotificationQueuePositionRepository $repository
+     * @param int $page
+     * @param int $limit
+     * @return Response
+     * @throws \ReflectionException
+     */
+    public function listActive(NotificationQueuePositionRepository $repository, int $page, int $limit): Response
+    {
+        $paginator = $repository->findPaginateByUser($page, $limit,$this->getUser());
+
+        return $this->render('notification/list_active.html.twig', [
+            'notifications' => $paginator->getIterator(),
+            'types'			=> (new Notification())->getTypesLabels(),
+            'totalPages'    => ceil($paginator->count() / $limit),
+            'currentPage'   => $page,
+            'limit'         => $limit,
+        ]);
     }
 
     /**

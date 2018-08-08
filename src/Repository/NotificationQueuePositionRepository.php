@@ -4,9 +4,11 @@
 namespace App\Repository;
 
 use App\Entity\NotificationQueuePosition;
+use App\Entity\User;
 use App\Service\Notifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -43,4 +45,28 @@ class NotificationQueuePositionRepository extends ServiceEntityRepository
 				->getResult()
 		);
 	}
+
+    /**
+     * @param int  $page
+     * @param int  $limit
+     * @param User $user
+     * @return Paginator
+     */
+    public function findPaginateByUser(int $page, int $limit, User $user): Paginator
+    {
+        return new Paginator(
+            $this->createQueryBuilder('nqp')
+                ->leftJoin('nqp.notification', 'n' )
+                ->where('n.user = :user')
+                ->setParameter('user', $user)
+                ->andWhere('n.active = true')
+                ->andWhere('nqp.status = :status')
+                ->setParameter('status', NotificationQueuePosition::STATUS_PENDING)
+                ->addOrderBy('nqp.dueDate', 'ASC')
+                ->setFirstResult($page * $limit - $limit)
+                ->setMaxResults($limit)
+                ->getQuery(),
+            $fetchJoinCollection = true
+        );
+    }
 }
