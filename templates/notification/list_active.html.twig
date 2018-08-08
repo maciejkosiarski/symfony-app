@@ -38,7 +38,7 @@
             {% for position in notifications %}
                 <tr class="{{ position.notification.active ? 'table-primary' : 'table-secondary' }}">
                     <td>{{ types[position.notification.type] }}</td>
-                    <td>{{ position.notification.message }}</td>
+                    <td>{{ position.notification.message|slice(0, 20) }}{% if position.notification.message|length > 20 %}...{% endif %}</td>
                     <td>
                         <a href="{{ path('notification_toggle_active', {'id': position.notification.id}) }}">
                             {{ position.notification.active ? 'Yes' : 'No' }}
