@@ -5,7 +5,7 @@ namespace App\Service\Factory;
 use App\Exception\CreateNotifierException;
 use App\Service\MailNotifier;
 use App\Service\Notifier;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\SmsNotifier;
 
 /**
  * Class ReminderFactory
@@ -35,12 +35,14 @@ class NotifierFactory
 		throw new CreateNotifierException($createMethod);
 	}
 
-	/**
-	 * @return MailNotifier
-	 */
 	private function createMailNotifier(): MailNotifier
 	{
 		return new MailNotifier($this->mailer);
+	}
+
+    private function createSmsNotifier(): SmsNotifier
+    {
+        return new SmsNotifier();
 	}
 
 	/**
