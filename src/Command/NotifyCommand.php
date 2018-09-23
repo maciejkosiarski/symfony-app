@@ -9,7 +9,6 @@ use App\Exception\CommandAlreadyRunningException;
 use App\Repository\NotificationQueuePositionRepository;
 use App\Service\Factory\NotifierFactory;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -23,8 +22,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class NotifyCommand extends Command
 {
-	use LockableTrait;
-
 	/**
 	 * @var NotifierFactory
 	 */
@@ -69,10 +66,6 @@ class NotifyCommand extends Command
 	protected function execute(InputInterface $input, OutputInterface $output): void
 	{
 		try{
-			if (!$this->lock()) {
-				throw new CommandAlreadyRunningException('Notify');
-			}
-
 			$notifier = $this->factory->getNotifierByName($input->getArgument('notifier'));
 			/** @var NotificationQueuePosition $queuePosition */
 			foreach ($this->repository->getQueueToSendByNotifier($notifier) as $queuePosition) {
