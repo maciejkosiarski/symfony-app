@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Notification;
+use App\Exception\PhoneNumberException;
 use GuzzleHttp\Client;
 
 /**
@@ -43,9 +44,14 @@ class SmsNotifier implements Notifier
     /**
      * @param Notification $notification
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws PhoneNumberException
      */
     public function notify(Notification $notification): void
     {
+        if (!is_numeric($notification->getUser()->getPhone())) {
+            throw new PhoneNumberException($notification->getUser()->getPhone());
+        }
+
         $this->client->request('POST', $this->api . '/message/send', [
             'headers' => [
                 'Authorization' => $this->token
