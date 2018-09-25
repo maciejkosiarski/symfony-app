@@ -4,24 +4,16 @@ namespace App\Service\Notifier;
 
 use App\Entity\Notification;
 use App\Exception\PhoneNumberException;
+use App\Service\Sms;
 use GuzzleHttp\Client;
 
 class SmsNotifier implements Notifier
 {
-    private $client;
+    private $sms;
 
-    private $token;
-
-    private $device;
-
-    private $api;
-
-    public function __construct()
+    public function __construct(Sms $sms)
     {
-        $this->client = new Client();
-        $this->token = getenv('SMS_AUTH_TOKEN');
-        $this->device = getenv('SMS_DEVICE_ID');
-        $this->api = getenv('SMS_URI');
+        $this->sms = $sms;
     }
 
     /**
@@ -30,31 +22,11 @@ class SmsNotifier implements Notifier
      */
     public function notify(Notification $notification): void
     {
-        if (!is_numeric($notification->getUser()->getPhone())) {
-            throw new PhoneNumberException($notification->getUser()->getPhone());
-        }
-
-        $this->client->request('POST', $this->api . '/message/send', [
-            'headers' => [
-                'Authorization' => $this->token
-            ],
-            'body' => $this->getBody($notification),
-        ]);
+        $this->sms->send($notification->getUser()->getPhone(), $notification->getMessage());
     }
 
     public function getNotificationType(): int
     {
         return Notification::TYPE_SMS;
-    }
-
-    private function getBody(Notification $notification): string
-    {
-        $body = '[{';
-        $body .= '"phone_number":"' . $notification->getUser()->getPhone() . '",';
-        $body .= '"message":"' . $notification->getMessage() . '",';
-        $body .= '"device_id":'. $this->device;
-        $body .= '}]';
-
-        return $body;
     }
 }

@@ -6,13 +6,13 @@ use App\Exception\CreateNotifierException;
 use App\Service\Notifier\MailNotifier;
 use App\Service\Notifier\Notifier;
 use App\Service\Notifier\SmsNotifier;
+use App\Service\Sms;
 
 class NotifierFactory
 {
-	/**
-	 * @var \Swift_Mailer
-	 */
 	private $mailer;
+
+	private $sms;
 
 	/**
 	 * @throws CreateNotifierException
@@ -35,7 +35,7 @@ class NotifierFactory
 
     private function createSmsNotifier(): SmsNotifier
     {
-        return new SmsNotifier();
+        return new SmsNotifier($this->sms);
 	}
 
 	/**
@@ -44,5 +44,13 @@ class NotifierFactory
 	public function getMailer(\Swift_Mailer $mailer): void
 	{
 		$this->mailer = $mailer;
+	}
+
+    /**
+     * @required
+     */
+    public function getSmsClient(Sms $sms): void
+    {
+        $this->sms = $sms;
 	}
 }
