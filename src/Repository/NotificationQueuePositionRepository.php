@@ -1,21 +1,15 @@
 <?php
 
-
 namespace App\Repository;
 
 use App\Entity\NotificationQueuePosition;
 use App\Entity\User;
-use App\Service\Notifier;
+use App\Service\Notifier\Notifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-/**
- * Class NotificationQueuePositionRepository
- * @package App\Repository
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotificationQueuePositionRepository extends ServiceEntityRepository
 {
 	public function __construct(RegistryInterface $registry)
@@ -23,10 +17,6 @@ class NotificationQueuePositionRepository extends ServiceEntityRepository
 		parent::__construct($registry, NotificationQueuePosition::class);
 	}
 
-	/**
-	 * @param Notifier $notifier
-	 * @return ArrayCollection
-	 */
 	public function getQueueToSendByNotifier(Notifier $notifier): ArrayCollection
 	{
 		return new ArrayCollection(
@@ -47,12 +37,6 @@ class NotificationQueuePositionRepository extends ServiceEntityRepository
 		);
 	}
 
-    /**
-     * @param int  $page
-     * @param int  $limit
-     * @param User $user
-     * @return Paginator
-     */
     public function findPaginateByUser(int $page, int $limit, User $user): Paginator
     {
         return new Paginator(

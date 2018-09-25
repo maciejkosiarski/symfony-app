@@ -1,17 +1,12 @@
 <?php
 
-namespace App\Service\Factory;
+namespace App\Service\Notifier\Factory;
 
 use App\Exception\CreateNotifierException;
-use App\Service\MailNotifier;
-use App\Service\Notifier;
-use App\Service\SmsNotifier;
+use App\Service\Notifier\MailNotifier;
+use App\Service\Notifier\Notifier;
+use App\Service\Notifier\SmsNotifier;
 
-/**
- * Class ReminderFactory
- * @package App\Service\Factory
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotifierFactory
 {
 	/**
@@ -20,11 +15,9 @@ class NotifierFactory
 	private $mailer;
 
 	/**
-	 * @param $name
-	 * @return Notifier
 	 * @throws CreateNotifierException
 	 */
-	public function getNotifierByName($name): Notifier
+	public function getNotifierByName(string $name): Notifier
 	{
 		$createMethod = 'create' . ucfirst($name). 'Notifier';
 
@@ -46,7 +39,6 @@ class NotifierFactory
 	}
 
 	/**
-	 * @param \Swift_Mailer $mailer
 	 * @required
 	 */
 	public function getMailer(\Swift_Mailer $mailer): void

@@ -1,38 +1,21 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Notifier;
 
 use App\Entity\Notification;
 use App\Exception\PhoneNumberException;
 use GuzzleHttp\Client;
 
-/**
- * Class SmsNotifier
- * @package App\Service
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class SmsNotifier implements Notifier
 {
-    /**
-     * @var Client
-     */
     private $client;
 
-    /**
-     * @var string
-     */
     private $token;
 
-    /**
-     * @var int
-     */
     private $device;
 
-    /**
-     * @var string
-     */
     private $api;
-    
+
     public function __construct()
     {
         $this->client = new Client();
@@ -42,7 +25,6 @@ class SmsNotifier implements Notifier
     }
 
     /**
-     * @param Notification $notification
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws PhoneNumberException
      */

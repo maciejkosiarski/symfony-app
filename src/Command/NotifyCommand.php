@@ -5,9 +5,8 @@ namespace App\Command;
 use App\Entity\NotificationQueuePosition;
 use App\Event\NotificationSendedEvent;
 use App\Event\NotificationSendedExceptionEvent;
-use App\Exception\CommandAlreadyRunningException;
 use App\Repository\NotificationQueuePositionRepository;
-use App\Service\Factory\NotifierFactory;
+use App\Service\Notifier\Factory\NotifierFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,26 +14,12 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * Class NotifyCommand
- * @package App\Command
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotifyCommand extends Command
 {
-	/**
-	 * @var NotifierFactory
-	 */
 	private $factory;
 
-	/**
-	 * @var NotificationQueuePositionRepository
-	 */
 	private $repository;
 
-	/**
-	 * @var EventDispatcherInterface
-	 */
 	private $dispatcher;
 
 	public function __construct(
@@ -59,10 +44,6 @@ class NotifyCommand extends Command
 
 	}
 
-	/**
-	 * @param InputInterface  $input
-	 * @param OutputInterface $output
-	 */
 	protected function execute(InputInterface $input, OutputInterface $output): void
 	{
 		try{
@@ -75,14 +56,9 @@ class NotifyCommand extends Command
 			}
 		} catch (\Exception $e) {
 			$this->dispatchSendedExceptionEvent($e, new ConsoleLogger($output));
-		} finally {
-			$this->release();
 		}
 	}
 
-	/**
-	 * @param NotificationQueuePosition $queuePosition
-	 */
 	private function dispatchSendedEvent(NotificationQueuePosition $queuePosition): void
 	{
 		$this->dispatcher->dispatch(
@@ -91,10 +67,6 @@ class NotifyCommand extends Command
 		);
 	}
 
-	/**
-	 * @param \Exception    $e
-	 * @param ConsoleLogger $logger
-	 */
 	private function dispatchSendedExceptionEvent(\Exception $e, ConsoleLogger $logger): void
 	{
 		$this->dispatcher->dispatch(
