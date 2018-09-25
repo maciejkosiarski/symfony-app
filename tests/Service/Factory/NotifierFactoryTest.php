@@ -2,15 +2,10 @@
 
 namespace App\Tests\Service\Factory;
 
-use App\Service\Factory\NotifierFactory;
-use App\Service\Notifier;
+use App\Service\Notifier\Factory\NotifierFactory;
+use App\Service\Notifier\Notifier;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class NotifierFactoryTest
- * @package App\Tests\Service\Factory
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotifierFactoryTest extends TestCase
 {
 	/**
@@ -18,7 +13,11 @@ class NotifierFactoryTest extends TestCase
 	 */
 	public function testAdd()
 	{
-		$names = ['mail', 'sms', 'browser'];
+		$names = [
+		    'mail',
+            'sms',
+            // 'browser'
+        ];
 
 		$notifierFactory = new NotifierFactory();
 
