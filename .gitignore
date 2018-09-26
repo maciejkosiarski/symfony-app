@@ -25,6 +25,7 @@ composer.lock
 
 ###> symfony/phpunit-bridge ###
 /phpunit.xml
+/bin/.phpunit/*
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/web-server-bundle ###
