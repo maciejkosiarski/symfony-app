@@ -4,16 +4,16 @@ namespace App\Service\Notifier;
 
 use App\Entity\Notification;
 use App\Exception\PhoneNumberException;
+use App\Service\SmsGateway;
 use App\Service\Sms;
-use GuzzleHttp\Client;
 
 class SmsNotifier implements Notifier
 {
-    private $sms;
+    private $gateway;
 
-    public function __construct(Sms $sms)
+    public function __construct(SmsGateway $gateway)
     {
-        $this->sms = $sms;
+        $this->gateway = $gateway;
     }
 
     /**
@@ -22,7 +22,11 @@ class SmsNotifier implements Notifier
      */
     public function notify(Notification $notification): void
     {
-        $this->sms->send($notification->getUser()->getPhone(), $notification->getMessage());
+        $sms = new Sms();
+        $sms->setReceiver($notification->getUser()->getPhone());
+        $sms->setMessage($notification->getMessage());
+
+        $this->gateway->send($sms);
     }
 
     public function getNotificationType(): int

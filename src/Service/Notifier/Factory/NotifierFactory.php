@@ -3,16 +3,16 @@
 namespace App\Service\Notifier\Factory;
 
 use App\Exception\CreateNotifierException;
+use App\Service\SmsGateway;
 use App\Service\Notifier\MailNotifier;
 use App\Service\Notifier\Notifier;
 use App\Service\Notifier\SmsNotifier;
-use App\Service\Sms;
 
 class NotifierFactory
 {
 	private $mailer;
 
-	private $sms;
+	private $smsGateway;
 
 	/**
 	 * @throws CreateNotifierException
@@ -35,7 +35,7 @@ class NotifierFactory
 
     private function createSmsNotifier(): SmsNotifier
     {
-        return new SmsNotifier($this->sms);
+        return new SmsNotifier($this->smsGateway);
 	}
 
 	/**
@@ -49,8 +49,8 @@ class NotifierFactory
     /**
      * @required
      */
-    public function getSmsClient(Sms $sms): void
+    public function getSmsGateway(SmsGateway $smsGateway): void
     {
-        $this->sms = $sms;
+        $this->smsGateway = $smsGateway;
 	}
 }
