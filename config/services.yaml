@@ -61,3 +61,9 @@ services:
             $em: '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: notification.blocked }
+
+    App\EventListener\Share\ShareFoundListener:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+        tags:
+            - { name: kernel.event_listener, event: share.found }
