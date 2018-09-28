@@ -6,4 +6,4 @@ php run cache:clear &&
 php run cache:warmup &&
 php run doctrine:migrations:migrate &&
 php run cache:clear &&
-hp run cache:warmup &&
+php run cache:warmup
