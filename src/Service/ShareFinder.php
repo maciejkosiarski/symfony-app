@@ -9,7 +9,6 @@ use Symfony\Component\DomCrawler\Crawler;
 class ShareFinder
 {
     private $clientHttp;
-
     private $domCrawler;
 
     public function __construct()
@@ -28,7 +27,10 @@ class ShareFinder
 
         $this->domCrawler->add($html->getBody()->getContents());
 
-        $price = $this->domCrawler->filter('#boxProfilHeader > .boxHeader > .textNowrap > .profilLast')->getNode(0)->nodeValue;
+        $price = $this->domCrawler
+            ->filter('#boxProfilHeader > .boxHeader > .textNowrap > .profilLast')
+            ->getNode(0)
+            ->nodeValue;
         $price = str_replace(',', '.', str_replace(' zł', '', $price));
 
         $share = new Share();
