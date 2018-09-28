@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Service\Factory;
+namespace App\Tests\Service\Notifier\Factory;
 
 use App\Service\Notifier\Factory\NotifierFactory;
 use App\Service\Notifier\Notifier;
@@ -11,7 +11,7 @@ class NotifierFactoryTest extends TestCase
 	/**
 	 * @throws \ReflectionException
 	 */
-	public function testAdd()
+	public function testCreate()
 	{
 		$names = [
 		    'mail',
