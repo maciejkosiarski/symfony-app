@@ -8,15 +8,18 @@ monolog:
                 # regex: exclude all 404 errors from the logs
                 - ^/
         nested:
-            type: stream
+            type: rotating_file
+            max_files: 30
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
+            channels: ["!event", "!notifications"]
         console:
             type:   console
             process_psr_3_messages: false
             channels: ["!event", "!doctrine", "!notifications"]
         notifications_logging:
             level: debug
-            type: stream
+            type: rotating_file
+            max_files: 30
             path: "%kernel.logs_dir%/notifications.log"
             channels: [notifications]

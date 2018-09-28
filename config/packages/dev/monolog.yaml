@@ -1,7 +1,8 @@
 monolog:
     handlers:
         main:
-            type: stream
+            type: rotating_file
+            max_files: 30
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
             channels: ["!event", "!notifications"]
@@ -19,6 +20,7 @@ monolog:
             channels: ["!event", "!doctrine", "!console"]
         notifications_logging:
             level: debug
-            type: stream
+            type: rotating_file
+            max_files: 30
             path: "%kernel.logs_dir%/notifications.log"
             channels: [notifications]
