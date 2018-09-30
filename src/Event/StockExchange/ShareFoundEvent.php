@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Event\Share;
+namespace App\Event\StockExchange;
 
-use App\Entity\Share;
+use App\Entity\CompanyShare;
 use Symfony\Component\EventDispatcher\Event;
 
 class ShareFoundEvent extends Event
@@ -10,16 +10,16 @@ class ShareFoundEvent extends Event
     const NAME = 'share.found';
 
     /**
-     * @var Share
+     * @var CompanyShare
      */
     protected $share;
 
-    public function __construct(Share $share)
+    public function __construct(CompanyShare $share)
     {
         $this->share = $share;
     }
 
-    public function getShare(): Share
+    public function getShare(): CompanyShare
     {
         return $this->share;
     }

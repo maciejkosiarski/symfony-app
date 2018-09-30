@@ -12,7 +12,7 @@ monolog:
             max_files: 30
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
-            channels: ["!event", "!notifications"]
+            channels: ["!event", "!notifications", "!stock_exchange"]
         console:
             type:   console
             process_psr_3_messages: false
@@ -23,3 +23,9 @@ monolog:
             max_files: 30
             path: "%kernel.logs_dir%/notifications.log"
             channels: [notifications]
+        stock_exchange_logging:
+            level: debug
+            type: rotating_file
+            max_files: 30
+            path: "%kernel.logs_dir%/stock-exchange.log"
+            channels: [stock_exchange]

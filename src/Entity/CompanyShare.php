@@ -3,20 +3,20 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class Share
- *
- * @package App\Entity
- * @ORM\Table(name="app_shares")
+ * @ORM\Table(name="app_company_shares")
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
-class Share extends BaseEntity
+class CompanyShare extends BaseEntity
 {
     /**
-     * @ORM\Column(name="company", type="string", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company")
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Type("App\Entity\Company")
      */
     private $company;
 
@@ -25,12 +25,12 @@ class Share extends BaseEntity
      */
     private $price;
 
-    public function getCompany(): string
+    public function getCompany(): Company
     {
         return $this->company;
     }
 
-    public function setCompany(string $company): void
+    public function setCompany(Company $company): void
     {
         $this->company = $company;
     }

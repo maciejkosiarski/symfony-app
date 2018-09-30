@@ -62,8 +62,14 @@ services:
         tags:
             - { name: kernel.event_listener, event: notification.blocked }
 
-    App\EventListener\Share\ShareFoundListener:
+    App\EventListener\StockExchange\ShareFoundListener:
         arguments:
             $em: '@doctrine.orm.entity_manager'
         tags:
             - { name: kernel.event_listener, event: share.found }
+
+    App\EventListener\StockExchange\ShareFoundExceptionListener:
+        arguments:
+            $logger: '@monolog.logger.stock_exchange'
+        tags:
+            - { name: kernel.event_listener, event: share.found.exception }

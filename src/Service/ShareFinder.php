@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Share;
+use App\Entity\Company;
+use App\Entity\CompanyShare;
+use App\Entity\CompanySource;
+use App\Exception\StockExchange\AllSourceFailedException;
 use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -18,25 +21,36 @@ class ShareFinder
     }
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws AllSourceFailedException
      */
-    public function find(string $company): Share
+    public function find(Company $company): CompanyShare
     {
-        $html = $this->clientHttp
-            ->request('GET', 'https://www.bankier.pl/inwestowanie/profile/quote.html?symbol=' . $company);
+        /** @var CompanySource $source */
+        foreach ($company->getSources() as $source) {
+            try {
+                $html = $this->clientHttp
+                    ->request('GET', $source->getPath());
 
-        $this->domCrawler->add($html->getBody()->getContents());
+                $this->domCrawler->add($html->getBody()->getContents());
 
-        $price = $this->domCrawler
-            ->filter('#boxProfilHeader > .boxHeader > .textNowrap > .profilLast')
-            ->getNode(0)
-            ->nodeValue;
-        $price = str_replace(',', '.', str_replace(' zł', '', $price));
+                $price = $this->domCrawler
+                    ->filter($source->getPriceSelector())
+                    ->getNode(0)
+                    ->nodeValue;
 
-        $share = new Share();
-        $share->setCompany($company);
-        $share->setPrice((float) $price);
+                $price = str_replace(',', '.', preg_replace("/[^0-9,.]/", "", $price));
 
-        return $share;
+                $share = new CompanyShare();
+                $share->setCompany($company);
+                $share->setPrice((float) $price);
+
+                return $share;
+            } catch (\GuzzleHttp\Exception\GuzzleException | \Exception $e) {
+                /** todo log something */
+                continue;
+            }
+        }
+
+        throw new AllSourceFailedException($company);
     }
 }

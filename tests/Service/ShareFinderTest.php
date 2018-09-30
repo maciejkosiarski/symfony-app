@@ -2,7 +2,7 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\Share;
+use App\Entity\CompanyShare;
 use App\Service\ShareFinder;
 use GuzzleHttp\Exception\ClientException;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +25,7 @@ class ShareFinderTest extends TestCase
 	{
         $share = $this->finder->find($company);
 
-        $this->assertInstanceOf(Share::class, $share);
+        $this->assertInstanceOf(CompanyShare::class, $share);
 	}
 
     /**

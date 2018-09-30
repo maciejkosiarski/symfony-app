@@ -1,9 +1,9 @@
 monolog:
-    channels: ['notifications']
+    channels: ['notifications', 'stock_exchange']
 
     handlers:
       # ...
       console:
         type:   console
         process_psr_3_messages: false
-        channels: ['!notifications']
+        channels: ['!notifications', '!stock_exchange']

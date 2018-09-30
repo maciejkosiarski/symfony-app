@@ -1,8 +1,8 @@
 <?php
 
-namespace App\EventListener\Share;
+namespace App\EventListener\StockExchange;
 
-use App\Event\Share\ShareFoundEvent;
+use App\Event\StockExchange\ShareFoundEvent;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ShareFoundListener
