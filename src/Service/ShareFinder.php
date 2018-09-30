@@ -12,12 +12,10 @@ use Symfony\Component\DomCrawler\Crawler;
 class ShareFinder
 {
     private $clientHttp;
-    private $domCrawler;
 
     public function __construct()
     {
         $this->clientHttp = new Client();
-        $this->domCrawler = new Crawler();
     }
 
     /**
@@ -31,9 +29,10 @@ class ShareFinder
                 $html = $this->clientHttp
                     ->request('GET', $source->getPath());
 
-                $this->domCrawler->add($html->getBody()->getContents());
+                $crawler = new Crawler();
+                $crawler->add($html->getBody()->getContents());
 
-                $price = $this->domCrawler
+                $price = $crawler
                     ->filter($source->getPriceSelector())
                     ->getNode(0)
                     ->nodeValue;
