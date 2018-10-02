@@ -13,7 +13,6 @@ use App\Service\Notifier\SmsNotifier;
 class NotifierFactory
 {
 	private $mailer;
-
 	private $smsGateway;
 
 	/**

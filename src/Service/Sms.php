@@ -9,7 +9,6 @@ use App\Exception\PhoneNumberException;
 class Sms
 {
     private $receiver;
-
     private $message;
 
     public function getReceiver(): int

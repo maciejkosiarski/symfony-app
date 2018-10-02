@@ -14,11 +14,8 @@ class SmsGateway
     const SEARCH = '/message/search';
 
     private $client;
-
     private $token;
-
     private $device;
-
     private $uri;
 
     public function __construct()
