@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -28,11 +29,15 @@ class Company extends BaseEntity
     private $active;
 
     /**
-     * @var PersistentCollection
      * @ORM\OneToMany(targetEntity="App\Entity\CompanySource", mappedBy="company", cascade={"persist"})
      * @ORM\OrderBy({"id" = "DESC"})
      */
     private $sources;
+
+    public function __construct()
+    {
+        $this->sources = new ArrayCollection();
+    }
 
     public function getName(): string
     {
@@ -54,13 +59,13 @@ class Company extends BaseEntity
         $this->active = !$this->active;
     }
 
-    public function getSources(): PersistentCollection
+    public function getSources(): Collection
     {
         return $this->sources;
     }
 
-    public function setSources(PersistentCollection $sources): void
+    public function addToSources(CompanySource $source): void
     {
-        $this->sources = $sources;
+        $this->sources->add($source);
     }
 }
