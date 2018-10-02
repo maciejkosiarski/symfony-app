@@ -24,15 +24,23 @@ class SmsNotifier implements Notifier
      */
     public function notify(Notification $notification): void
     {
-        $sms = new Sms();
-        $sms->setReceiver($notification->getUser()->getPhone());
-        $sms->setMessage($notification->getMessage());
-
-        $this->gateway->send($sms);
+        $this->gateway->send($this->createSms($notification));
     }
 
     public function getNotificationType(): int
     {
         return Notification::TYPE_SMS;
+    }
+
+    /**
+     * @throws PhoneNumberException
+     */
+    private function createSms(Notification $notification): Sms
+    {
+        $sms = new Sms();
+        $sms->setReceiver($notification->getUser()->getPhone());
+        $sms->setMessage($notification->getMessage());
+
+        return $sms;
     }
 }
