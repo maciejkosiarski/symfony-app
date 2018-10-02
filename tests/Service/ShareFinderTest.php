@@ -8,7 +8,7 @@ use App\Entity\Company;
 use App\Entity\CompanyShare;
 use App\Entity\CompanySource;
 use App\Exception\StockExchange\AllSourceFailedException;
-use App\Service\ShareFinder;
+use App\Service\StockExchange\ShareFinder;
 use PHPUnit\Framework\TestCase;
 
 class ShareFinderTest extends TestCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\StockExchange;
 
 use App\Entity\Company;
 use App\Entity\CompanyShare;

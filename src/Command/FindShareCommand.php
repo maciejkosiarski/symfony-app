@@ -9,7 +9,7 @@ use App\Event\StockExchange\ShareFoundEvent;
 use App\Event\StockExchange\ShareFoundExceptionEvent;
 use App\Exception\CommandAlreadyRunningException;
 use App\Repository\CompanyRepository;
-use App\Service\ShareFinder;
+use App\Service\StockExchange\ShareFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
