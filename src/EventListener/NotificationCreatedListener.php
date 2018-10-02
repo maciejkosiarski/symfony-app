@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\Notification;
@@ -7,11 +9,6 @@ use App\Entity\NotificationQueuePosition;
 use Cron\CronExpression;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
-/**
- * Class NotificationCreatedListener
- * @package App\EventListener
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotificationCreatedListener
 {
 	/**
@@ -19,7 +16,7 @@ class NotificationCreatedListener
 	 * @throws \Doctrine\ORM\ORMException
 	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
-	public function postPersist(LifecycleEventArgs $args)
+	public function postPersist(LifecycleEventArgs $args): void
 	{
 		$entity = $args->getEntity();
 

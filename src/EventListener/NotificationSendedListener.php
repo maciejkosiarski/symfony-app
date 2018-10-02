@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Entity\NotificationQueuePosition;
@@ -7,21 +9,10 @@ use App\Event\NotificationSendedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class NotificationSendedListener
- * @package App\EventListener
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotificationSendedListener
 {
-	/**
-	 * @var LoggerInterface
-	 */
 	private $logger;
 
-	/**
-	 * @var EntityManagerInterface
-	 */
 	private $em;
 
 	public function __construct(LoggerInterface $logger, EntityManagerInterface $em)
@@ -31,7 +22,6 @@ class NotificationSendedListener
 	}
 
 	/**
-	 * @param NotificationSendedEvent $event
 	 * @throws \App\Exception\InvalidQueueStatusException
 	 * @throws \ReflectionException
 	 */

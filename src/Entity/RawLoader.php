@@ -1,18 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-/**
- * Trait RawLoader
- * @package App\Entity
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 trait RawLoader
 {
-	/**
-	 * @return array
-	 */
-	public function toArray()
+	public function toArray(): array
 	{
 		return get_object_vars($this);
 	}

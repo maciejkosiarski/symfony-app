@@ -1,20 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Event\NotificationSendedExceptionEvent;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class NotificationSendedExceptionListener
- * @package App\EventListener
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotificationSendedExceptionListener
 {
-	/**
-	 * @var LoggerInterface
-	 */
 	private $logger;
 
 	public function __construct(LoggerInterface $logger)

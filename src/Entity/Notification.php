@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -11,13 +12,9 @@ use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class Notification
- *
- * @package App\Entity
  * @ORM\Table(name="app_notifications")
  * @ORM\Entity(repositoryClass="App\Repository\NotificationRepository")
  * @ORM\HasLifecycleCallbacks()
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class Notification extends BaseEntity
 {
@@ -26,7 +23,6 @@ class Notification extends BaseEntity
 	const TYPE_SMS 	   = 3;
 
 	/**
-	 * @var User
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="notifications")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
 	 * @Assert\NotBlank()
@@ -35,7 +31,6 @@ class Notification extends BaseEntity
 	private $user;
 
 	/**
-	 * @var integer
 	 * @ORM\Column(name="type", type="integer", length=30,  nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type("integer")
@@ -43,7 +38,6 @@ class Notification extends BaseEntity
 	private $type;
 
 	/**
-	 * @var string
 	 * @ORM\Column(name="message", type="text", nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type("string")
@@ -51,21 +45,18 @@ class Notification extends BaseEntity
 	private $message;
 
 	/**
-	 * @var boolean
 	 * @ORM\Column(name="active", type="boolean", nullable=false)
 	 * @Assert\Type("boolean")
 	 */
 	private $active;
 
 	/**
-	 * @var boolean
 	 * @ORM\Column(name="recurrent", type="boolean", nullable=false)
 	 * @Assert\Type("boolean")
 	 */
 	private $recurrent;
 
 	/**
-	 * @var string
 	 * @ORM\Column(name="interval_expression", type="string", nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type(type="string")
@@ -86,32 +77,22 @@ class Notification extends BaseEntity
 		$this->recurrent      = true;
 	}
 
-	/**
-	 * @return User
-	 */
 	public function getUser(): User
 	{
 		return $this->user;
 	}
 
-	/**
-	 * @param User $user
-	 */
 	public function setUser(User $user): void
 	{
 		$this->user = $user;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getType(): ?string
 	{
 		return $this->type;
 	}
 
 	/**
-	 * @param int $type
 	 * @throws InvalidNotificationTypeException
 	 * @throws \ReflectionException
 	 */
@@ -124,25 +105,16 @@ class Notification extends BaseEntity
 		$this->type = $type;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getMessage(): ?string
 	{
 		return $this->message;
 	}
 
-	/**
-	 * @param string $message
-	 */
 	public function setMessage(string $message): void
 	{
 		$this->message = $message;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isActive(): bool
 	{
 		return $this->active;
@@ -153,17 +125,11 @@ class Notification extends BaseEntity
 		$this->active = !$this->active;
 	}
 
-	/**
-	 * @param bool $bool
-	 */
 	public function setRecurrent(bool $bool)
 	{
 		$this->recurrent = $bool;
 	}
 
-	/**
-	 * @return bool
-	 */
 	public function isRecurrent(): bool
 	{
 		return $this->recurrent;
@@ -174,17 +140,11 @@ class Notification extends BaseEntity
 		$this->recurrent = !$this->recurrent;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getIntervalExpression(): ?string
 	{
 		return $this->intervalExpression;
 	}
 
-	/**
-	 * @param string $expression
-	 */
 	public function setIntervalExpression(string $expression): void
 	{
 		$expressions = $this->getDefaultExpressions();
@@ -192,9 +152,6 @@ class Notification extends BaseEntity
 		$this->intervalExpression = (key_exists($expression, $expressions)) ? $expressions[$expression] : $expression;
 	}
 
-	/**
-	 * @return PersistentCollection
-	 */
 	public function getQueuePositions(): PersistentCollection
 	{
 		return $this->queuePositions;
@@ -210,8 +167,6 @@ class Notification extends BaseEntity
 	}
 
 	/**
-	 * @param int $type
-	 * @return bool
 	 * @throws \InvalidArgumentException
 	 * @throws \ReflectionException
 	 */
@@ -220,14 +175,9 @@ class Notification extends BaseEntity
 		return in_array($type, $this->getTypeList());
 	}
 
-
-	/**
-	 * @var int[]
-	 */
 	private $typeList;
 
 	/**
-	 * @return int[]
 	 * @throws \ReflectionException
 	 */
 	public function getTypeList(): array
@@ -245,9 +195,6 @@ class Notification extends BaseEntity
 		return $this->typeList;
 	}
 
-	/**
-	 * @return array
-	 */
 	private function getDefaultExpressions(): array
 	{
 		return [
@@ -260,9 +207,6 @@ class Notification extends BaseEntity
 		];
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getPreviousRun(): string
 	{
 		$cronExpression = CronExpression::factory($this->intervalExpression);
@@ -270,9 +214,6 @@ class Notification extends BaseEntity
 		return $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getNextRun(): string
 	{
 		$cronExpression = CronExpression::factory($this->intervalExpression);
@@ -280,9 +221,6 @@ class Notification extends BaseEntity
 		return $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
 	}
 
-	/**
-	 * @return \DateTime
-	 */
 	public function getDateTimeNextRun(): \DateTime
 	{
 		$cronExpression = CronExpression::factory($this->intervalExpression);
@@ -308,10 +246,9 @@ class Notification extends BaseEntity
 	}
 
 	/**
-	 * @return array
 	 * @throws \ReflectionException
 	 */
-	public function getTypesLabels()
+	public function getTypesLabels(): array
 	{
 		return array_map(function ($type) {
 			return strtolower(str_replace('TYPE_', '', $type));

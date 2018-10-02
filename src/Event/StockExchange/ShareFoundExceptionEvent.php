@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Event\StockExchange;
 
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -9,14 +11,8 @@ class ShareFoundExceptionEvent extends Event
 {
 	const NAME = 'share.found.exception';
 
-	/**
-	 * @var \Exception
-	 */
 	protected $exception;
 
-	/**
-	 * @var ConsoleLogger
-	 */
 	protected $logger;
 
 	public function __construct(\Exception $exception, ConsoleLogger $logger)

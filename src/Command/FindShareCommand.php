@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\CompanyShare;
@@ -31,14 +33,14 @@ class FindShareCommand extends Command
         parent::__construct($name);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('app:find:share')
             ->setDescription('Find share current prices')
             ->setHelp('');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         try{
             if (!$this->lock()) {
@@ -69,7 +71,7 @@ class FindShareCommand extends Command
         );
     }
 
-    private function dispatchFoundExceptionEvent(\Exception $e,  ConsoleLogger $logger)
+    private function dispatchFoundExceptionEvent(\Exception $e,  ConsoleLogger $logger): void
     {
         $this->dispatcher->dispatch(
             ShareFoundExceptionEvent::NAME,

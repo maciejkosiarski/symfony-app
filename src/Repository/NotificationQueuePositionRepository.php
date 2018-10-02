@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\NotificationQueuePosition;
@@ -12,36 +14,36 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class NotificationQueuePositionRepository extends ServiceEntityRepository
 {
-	public function __construct(RegistryInterface $registry)
-	{
-		parent::__construct($registry, NotificationQueuePosition::class);
-	}
+    public function __construct(RegistryInterface $registry)
+    {
+        parent::__construct($registry, NotificationQueuePosition::class);
+    }
 
-	public function getQueueToSendByNotifier(Notifier $notifier): ArrayCollection
-	{
-		return new ArrayCollection(
-			$this->createQueryBuilder('nqp')
-				->leftJoin('nqp.notification', 'n' )
-				->where('nqp.status = :status')
-				->setParameter('status', NotificationQueuePosition::STATUS_PENDING)
-				->andwhere('n.active = :active')
-				->setParameter('active', true)
-				->andWhere('n.type = :type')
-				->setParameter('type', $notifier->getNotificationType())
-				->andWhere('nqp.dueDate < :dueDate')
-				->setParameter('dueDate', new \DateTime('now'))
-				->orderBy('nqp.createdAt', 'ASC')
+    public function getQueueToSendByNotifier(Notifier $notifier): ArrayCollection
+    {
+        return new ArrayCollection(
+            $this->createQueryBuilder('nqp')
+                ->leftJoin('nqp.notification', 'n')
+                ->where('nqp.status = :status')
+                ->setParameter('status', NotificationQueuePosition::STATUS_PENDING)
+                ->andwhere('n.active = :active')
+                ->setParameter('active', true)
+                ->andWhere('n.type = :type')
+                ->setParameter('type', $notifier->getNotificationType())
+                ->andWhere('nqp.dueDate < :dueDate')
+                ->setParameter('dueDate', new \DateTime('now'))
+                ->orderBy('nqp.createdAt', 'ASC')
                 ->setMaxResults(10)
-				->getQuery()
-				->getResult()
-		);
-	}
+                ->getQuery()
+                ->getResult()
+        );
+    }
 
     public function findPaginateByUser(int $page, int $limit, User $user): Paginator
     {
         return new Paginator(
             $this->createQueryBuilder('nqp')
-                ->leftJoin('nqp.notification', 'n' )
+                ->leftJoin('nqp.notification', 'n')
                 ->where('n.user = :user')
                 ->setParameter('user', $user)
                 ->andWhere('n.active = true')

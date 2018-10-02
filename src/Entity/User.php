@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -10,15 +11,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * Class User
- *
- * @package App\Entity
  * @ORM\Table(name="app_users")
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity(fields="email", message="Email already taken")
  * @UniqueEntity(fields="username", message="Username already taken")
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class User extends BaseEntity implements UserInterface, \Serializable
 {
@@ -65,14 +62,12 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	private $isActive;
 
 	/**
-	 * @var PersistentCollection
 	 * @ORM\OneToMany(targetEntity="Role", mappedBy="user", cascade={"persist"})
 	 * @ORM\OrderBy({"id" = "DESC"})
 	 */
 	private $roles;
 
 	/**
-	 * @var PersistentCollection
 	 * @ORM\OneToMany(targetEntity="Notification", mappedBy="user", cascade={"persist"})
 	 * @ORM\OrderBy({"id" = "DESC"})
 	 */
@@ -84,105 +79,66 @@ class User extends BaseEntity implements UserInterface, \Serializable
 		$this->apiKey 	 = sha1(uniqid());
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function getUsername(): ?string
 	{
 		return $this->username;
 	}
 
-	/**
-	 * @param string $username
-	 */
 	public function setUsername(string $username): void
 	{
 		$this->username = $username;
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function getPassword(): ?string
 	{
 		return $this->password;
 	}
 
-	/**
-	 * @param string $password
-	 */
 	public function setPassword(string $password): void
 	{
 		$this->password = $password;
 	}
 
-	/**
-	 * @return string|null
-	 */
 	public function getEmail(): ?string
 	{
 		return $this->email;
 	}
 
-	/**
-	 * @param string $email
-	 */
 	public function setEmail(string $email): void
 	{
 		$this->email = $email;
 	}
 
-	/**
-	 * @return integer
-	 */
 	public function getPhone(): ?int
 	{
 		return $this->phone;
 	}
 
-	/**
-	 * @param int $phone
-	 */
 	public function setPhone(int $phone): void
 	{
 		$this->phone = $phone;
 	}
 
-	/**
-	 * @return mixed
-	 */
 	public function getApiKey(): string
 	{
 		return $this->apiKey;
 	}
 
-	/**
-	 * @param string $apiKey
-	 */
 	public function setApiKey(string $apiKey): void
 	{
 		$this->apiKey = $apiKey;
 	}
 
-	/**
-	 * @return mixed
-	 */
 	public function isActive(): bool
 	{
 		return $this->isActive;
 	}
 
-	/**
-	 * @param bool $isActive
-	 */
 	public function setIsActive(bool $isActive): void
 	{
 		$this->isActive = $isActive;
 	}
 
-	/**
-	 * @return array
-	 */
 	public function getRoles(): array
 	{
 		return $this->roles->map(function ($role){
@@ -191,9 +147,6 @@ class User extends BaseEntity implements UserInterface, \Serializable
 		})->toArray();
 	}
 
-	/**
-	 * @return PersistentCollection
-	 */
 	public function getNotifications(): PersistentCollection
 	{
 		return $this->notifications;
@@ -204,14 +157,8 @@ class User extends BaseEntity implements UserInterface, \Serializable
 		return null;
 	}
 
-	public function eraseCredentials()
-	{
+	public function eraseCredentials() {}
 
-	}
-
-	/**
-	 * @return string
-	 */
 	public function serialize(): string
 	{
 		return serialize([
@@ -221,9 +168,6 @@ class User extends BaseEntity implements UserInterface, \Serializable
 		]);
 	}
 
-	/**
-	 * @param string $serialized
-	 */
 	public function unserialize($serialized)
 	{
 		list (

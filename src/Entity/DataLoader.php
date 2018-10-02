@@ -1,22 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use Doctrine\Common\Inflector\Inflector;
 
-/**
- * Trait DataLoader
- * @package App\Entity
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 trait DataLoader
 {
-	/**
-	 * @param array $data
-	 *
-	 * @return $this
-	 */
-	public function loadData(array $data)
+	public function loadData(array $data): self
 	{
 		foreach ($data as $key => $value) {
 			$method = Inflector::camelize('set_' . $key);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use App\Entity\Notification;
@@ -13,8 +15,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NotificationType extends AbstractType
 {
 	/**
-	 * @param FormBuilderInterface $builder
-	 * @param array                $options
 	 * @throws \ReflectionException
 	 */
     public function buildForm(FormBuilderInterface $builder, array $options): void

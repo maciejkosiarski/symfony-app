@@ -1,21 +1,17 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\Notification;
 use App\Entity\User;
-use App\Service\Notifier;
+use App\Service\Notifier\Notifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-/**
- * Class NotificationRepository
- * @package App\Repository
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class NotificationRepository extends ServiceEntityRepository
 {
 	public function __construct(RegistryInterface $registry)
@@ -23,10 +19,6 @@ class NotificationRepository extends ServiceEntityRepository
 		parent::__construct($registry, Notification::class);
 	}
 
-	/**
-	 * @param Notifier $notifier
-	 * @return ArrayCollection
-	 */
 	public function getActiveByNotifier(Notifier $notifier): ArrayCollection
 	{
 		return new ArrayCollection(
@@ -42,10 +34,6 @@ class NotificationRepository extends ServiceEntityRepository
 		);
 	}
 
-	/**
-	 * @param User $user
-	 * @return ArrayCollection
-	 */
 	public function findByUser(User $user):ArrayCollection
 	{
 		return new ArrayCollection(
@@ -59,12 +47,6 @@ class NotificationRepository extends ServiceEntityRepository
 		);
 	}
 
-	/**
-	 * @param int  $page
-	 * @param int  $limit
-	 * @param User $user
-	 * @return Paginator
-	 */
 	public function findPaginateByUser(int $page, int $limit, User $user): Paginator
 	{
 		return new Paginator(

@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -8,13 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class Role
- *
- * @package App\Entity
  * @ORM\Table(name="app_roles")
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class Role extends BaseEntity
 {
@@ -23,7 +20,6 @@ class Role extends BaseEntity
 	const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
 	/**
-	 * @var User
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="roles")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
 	 * @Assert\NotBlank()
@@ -32,7 +28,6 @@ class Role extends BaseEntity
 	private $user;
 
 	/**
-	 * @var string
 	 * @ORM\Column(name="role", type="string", nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type("string")
@@ -40,44 +35,30 @@ class Role extends BaseEntity
 	private $role;
 
 	/**
-	 * Role constructor.
-	 *
-	 * @param User   $user
-	 * @param string $role
 	 * @throws InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
-	public function __construct( $user, string $role)
+	public function __construct(User $user, string $role)
 	{	$this->user = $user;
 		$this->setRole($role);
 	}
 
-	/**
-	 * @return User
-	 */
 	public function getUser(): User
 	{
 		return $this->user;
 	}
 
-	/**
-	 * @param User $user
-	 */
 	public function setUser(User $user): void
 	{
 		$this->user = $user;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function getRole(): string
 	{
 		return $this->role;
 	}
 
 	/**
-	 * @param string $role
 	 * @throws InvalidUserRoleException
 	 * @throws \ReflectionException
 	 */
@@ -91,8 +72,6 @@ class Role extends BaseEntity
 	}
 
 	/**
-	 * @param string $role
-	 * @return bool
 	 * @throws \InvalidArgumentException
 	 * @throws \ReflectionException
 	 */
@@ -101,14 +80,9 @@ class Role extends BaseEntity
 		return in_array($role, $this->getRoleList());
 	}
 
-
-	/**
-	 * @var string[]
-	 */
 	private $roleList;
 
 	/**
-	 * @return string[]
 	 * @throws \ReflectionException
 	 */
 	private function getRoleList(): array

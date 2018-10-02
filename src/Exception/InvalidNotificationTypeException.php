@@ -1,12 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception;
 
-/**
- * Class InvalidNotificationTypeException
- * @package App\Exception
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
- */
 class InvalidNotificationTypeException extends \Exception
 {
 	public function __construct(string $type, array $types)

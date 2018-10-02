@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Entity;
 
@@ -8,13 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class NotificationQueuePosition
- *
- * @package App\Entity
  * @ORM\Table(name="app_notification_queue_positions")
  * @ORM\Entity(repositoryClass="App\Repository\NotificationQueuePositionRepository")
  * @ORM\HasLifecycleCallbacks()
- * @author  Maciej Kosiarski <maciek.kosiarski@gmail.com>
  */
 class NotificationQueuePosition extends BaseEntity
 {
@@ -23,7 +20,6 @@ class NotificationQueuePosition extends BaseEntity
 	const STATUS_CANCELED = 3;
 
 	/**
-	 * @var Notification
 	 * @ORM\ManyToOne(targetEntity="App\Entity\Notification", inversedBy="queuePositions")
 	 * @ORM\JoinColumn(name="notification_id", referencedColumnName="id", nullable=false)
 	 * @Assert\NotBlank()
@@ -32,7 +28,6 @@ class NotificationQueuePosition extends BaseEntity
 	private $notification;
 
 	/**
-	 * @var integer
 	 * @ORM\Column(name="status", type="integer", length=30,  nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type("integer")
@@ -40,45 +35,33 @@ class NotificationQueuePosition extends BaseEntity
 	private $status;
 
 	/**
-	 * @var \DateTime
 	 * @ORM\Column(name="due_date", type="datetime", nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type("string")
 	 */
 	private $dueDate;
 
-
 	public function __construct()
 	{
 		$this->status = self::STATUS_PENDING;
 	}
 
-	/**
-	 * @return Notification
-	 */
 	public function getNotification(): Notification
 	{
 		return $this->notification;
 	}
 
-	/**
-	 * @param Notification $notification
-	 */
 	public function setNotification(Notification $notification)
 	{
 		$this->notification = $notification;
 	}
 
-	/**
-	 * @return int
-	 */
 	public function getStatus(): int
 	{
 		return $this->status;
 	}
 
 	/**
-	 * @param int $status
 	 * @throws InvalidQueueStatusException
 	 * @throws \ReflectionException
 	 */
@@ -91,17 +74,11 @@ class NotificationQueuePosition extends BaseEntity
 		$this->status = $status;
 	}
 
-	/**
-	 * @return \DateTime
-	 */
 	public function getDueDate(): \DateTime
 	{
 		return $this->dueDate;
 	}
 
-	/**
-	 * @param \DateTime $dueDate
-	 */
 	public function setDueDate(\DateTime $dueDate)
 	{
 		$this->dueDate = $dueDate;
@@ -118,9 +95,6 @@ class NotificationQueuePosition extends BaseEntity
 		return in_array($status, $this->getStatusList());
 	}
 
-	/**
-	 * @var int[]
-	 */
 	private $statusList;
 
 	/**
@@ -146,7 +120,7 @@ class NotificationQueuePosition extends BaseEntity
 	 * @return array
 	 * @throws \ReflectionException
 	 */
-	public function getStatusLabels()
+	public function getStatusLabels(): array
 	{
 		return array_map(function ($status) {
 			return strtolower(str_replace('STATUS_', '', $status));

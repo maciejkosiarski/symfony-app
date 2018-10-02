@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Event\StockExchange;
 
 use App\Entity\CompanyShare;
@@ -9,9 +11,6 @@ class ShareFoundEvent extends Event
 {
     const NAME = 'share.found';
 
-    /**
-     * @var CompanyShare
-     */
     protected $share;
 
     public function __construct(CompanyShare $share)
