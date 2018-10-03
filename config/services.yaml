@@ -65,6 +65,9 @@ services:
     App\EventListener\StockExchange\ShareFoundListener:
         arguments:
             $em: '@doctrine.orm.entity_manager'
+            $mailer: '@mailer'
+            $companyProbeRepository: '@App\Repository\CompanyProbeRepository'
+            $companyShareRepository: '@App\Repository\CompanyShareRepository'
         tags:
             - { name: kernel.event_listener, event: share.found }
 
