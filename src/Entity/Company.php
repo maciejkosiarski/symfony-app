@@ -26,7 +26,7 @@ class Company extends BaseEntity
      * @ORM\Column(name="active", type="boolean", nullable=false)
      * @Assert\Type("boolean")
      */
-    private $active;
+    private $active = true;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\CompanySource", mappedBy="company", cascade={"persist"})
@@ -39,7 +39,7 @@ class Company extends BaseEntity
         $this->sources = new ArrayCollection();
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

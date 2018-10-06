@@ -24,17 +24,17 @@ class CompanySource extends BaseEntity
 
     /**
      * @ORM\Column(name="path", type="string", nullable=false)
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"form"})
      */
     private $path;
 
     /**
      * @ORM\Column(name="price_selector", type="string", nullable=false)
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"form"})
      */
     private $priceSelector;
 
-    public function getCompany(): Company
+    public function getCompany(): ?Company
     {
         return $this->company;
     }
@@ -44,7 +44,7 @@ class CompanySource extends BaseEntity
         $this->company = $company;
     }
 
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->path;
     }
@@ -54,7 +54,7 @@ class CompanySource extends BaseEntity
         $this->path = $path;
     }
 
-    public function getPriceSelector(): string
+    public function getPriceSelector(): ?string
     {
         return $this->priceSelector;
     }
