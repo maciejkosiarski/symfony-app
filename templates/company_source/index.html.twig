@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CompanySource index{% endblock %}
+
+{% block body %}
+    <h1>CompanySource index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Path</th>
+                <th>PriceSelector</th>
+                <th>Id</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for company_source in company_sources %}
+            <tr>
+                <td>{{ company_source.path }}</td>
+                <td>{{ company_source.priceSelector }}</td>
+                <td>{{ company_source.id }}</td>
+                <td>{{ company_source.createdAt ? company_source.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ company_source.updatedAt ? company_source.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('company_source_show', {'id': company_source.id}) }}">show</a>
+                    <a href="{{ path('company_source_edit', {'id': company_source.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('company_source_new') }}">Create new</a>
+{% endblock %}

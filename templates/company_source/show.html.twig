@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CompanySource{% endblock %}
+
+{% block body %}
+    <h1>CompanySource</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Path</th>
+                <td>{{ company_source.path }}</td>
+            </tr>
+            <tr>
+                <th>PriceSelector</th>
+                <td>{{ company_source.priceSelector }}</td>
+            </tr>
+            <tr>
+                <th>Id</th>
+                <td>{{ company_source.id }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ company_source.createdAt ? company_source.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ company_source.updatedAt ? company_source.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('company_source_index') }}">back to list</a>
+
+    <a href="{{ path('company_source_edit', {'id': company_source.id}) }}">edit</a>
+
+    {{ include('company_source/_delete_form.html.twig') }}
+{% endblock %}
