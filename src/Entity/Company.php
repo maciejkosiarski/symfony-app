@@ -8,16 +8,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="app_companies")
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity("name")
  */
 class Company extends BaseEntity
 {
     /**
-     * @ORM\Column(name="name", type="string", nullable=false)
+     * @ORM\Column(name="name", type="string", nullable=false, unique=true)
      * @Assert\Type("string")
      */
     private $name;
