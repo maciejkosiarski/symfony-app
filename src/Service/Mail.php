@@ -18,7 +18,7 @@ class Mail
     /**
      * @throws NotifyException
      */
-    public function send($subject, $to, $body): void
+    public function send(string $subject, string $to, string $body): void
     {
         if (0 === $this->mailer->send($this->prepareMessage($subject, $to, $body))){
             throw new NotifyException($to);
