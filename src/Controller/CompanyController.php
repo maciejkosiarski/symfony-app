@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\CompanyWatcher;
 use App\Form\CompanyType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -88,6 +89,22 @@ class CompanyController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($company);
+        $em->flush();
+
+        return $this->redirectToRoute('company_index');
+    }
+
+    /**
+     * @Route("/{id}/watcher", name="company_watcher", methods="GET")
+     */
+    public function watcher(Company $company)
+    {
+        $watcher = new CompanyWatcher();
+        $watcher->setCompany($company);
+        $watcher->setUser($this->getUser());
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($watcher);
         $em->flush();
 
         return $this->redirectToRoute('company_index');

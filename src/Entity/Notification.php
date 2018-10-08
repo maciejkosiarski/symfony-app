@@ -87,7 +87,7 @@ class Notification extends BaseEntity
 		$this->user = $user;
 	}
 
-	public function getType(): ?string
+	public function getType(): ?int
 	{
 		return $this->type;
 	}
