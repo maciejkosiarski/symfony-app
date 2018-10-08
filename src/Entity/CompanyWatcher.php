@@ -6,9 +6,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
- * @ORM\Table(name="app_company_watchers")
+ * @ORM\Table(name="app_company_watchers", uniqueConstraints={@UniqueConstraint(name="unique_watcher", columns={"user_id", "company_id"})})
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
