@@ -104,7 +104,7 @@ class CompanyController extends Controller
         $watcher->setUser($this->getUser());
 
         $em = $this->getDoctrine()->getManager();
-        $em->remove($watcher);
+        $em->persist($watcher);
         $em->flush();
 
         return $this->redirectToRoute('company_index');
