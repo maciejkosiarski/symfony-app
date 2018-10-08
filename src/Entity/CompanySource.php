@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CompanySource extends BaseEntity
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Company")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="sources")
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank()
      * @Assert\Type("Company")
