@@ -17,7 +17,7 @@ use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class FindShareCommand extends Command
+class CheckSharesCommand extends Command
 {
     use LockableTrait;
 
@@ -35,8 +35,8 @@ class FindShareCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName('app:find:share')
-            ->setDescription('Find share current prices')
+        $this->setName('app:check:shares')
+            ->setDescription('Find current shares prices of active companies')
             ->setHelp('');
     }
 
