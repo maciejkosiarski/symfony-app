@@ -6,18 +6,18 @@ namespace App\Service\StockExchange;
 
 use App\Entity\Company;
 use App\Entity\CompanyShare;
-use App\Repository\CompanyProbeRepository;
+use App\Repository\CompanyWatcherRepository;
 use App\Repository\CompanyShareRepository;
 
 class ShareAnalyzer
 {
     private $shareRepository;
-    private $probeRepository;
+    private $watcherRepository;
 
-    public function __construct(CompanyShareRepository $shareRepository, CompanyProbeRepository $probeRepository)
+    public function __construct(CompanyShareRepository $shareRepository, CompanyWatcherRepository $watcherRepository)
     {
         $this->shareRepository = $shareRepository;
-        $this->probeRepository = $probeRepository;
+        $this->watcherRepository = $watcherRepository;
     }
 
     /**

@@ -8,11 +8,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="app_company_probes")
+ * @ORM\Table(name="app_company_watchers")
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
-class CompanyProbe extends BaseEntity
+class CompanyWatcher extends BaseEntity
 {
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")

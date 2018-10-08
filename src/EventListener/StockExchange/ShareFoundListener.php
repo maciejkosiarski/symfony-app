@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\EventListener\StockExchange;
 
-use App\Entity\CompanyProbe;
+use App\Entity\CompanyWatcher;
 use App\Event\StockExchange\ShareFoundEvent;
 use App\Exception\NotifyException;
 use App\Service\Mail;
@@ -34,12 +34,12 @@ class ShareFoundListener
         $share = $event->getShare();
 
         if ($body = $this->analyzer->checkExtremes($share)) {
-            dump($body);
-            /** @var CompanyProbe $probe */
-            foreach ($this->em->getRepository(CompanyProbe::class)->findByCompany($share->getCompany()) as $probe) {
+            $repository = $this->em->getRepository(CompanyWatcher::class);
+            /** @var CompanyWatcher $watcher */
+            foreach ($repository->findByCompany($share->getCompany()) as $watcher) {
                 $this->mail->send(
-                    $probe->getCompany()->getName(),
-                    $probe->getUser()->getEmail(),
+                    $watcher->getCompany()->getName(),
+                    $watcher->getUser()->getEmail(),
                     $body
                 );
             }
