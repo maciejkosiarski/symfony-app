@@ -23,7 +23,7 @@ class AnalyzeSharesCommand extends Command
     protected function configure()
     {
         $this->setName('app:analyze:shares')
-            ->setDescription('Analyze shares and notify users')
+            ->setDescription('Analyze shares prices and notify by watchers')
             ->setHelp('');
     }
 
