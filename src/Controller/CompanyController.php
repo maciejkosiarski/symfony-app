@@ -95,9 +95,9 @@ class CompanyController extends Controller
     }
 
     /**
-     * @Route("/{id}/watcher", name="company_watcher", methods="GET")
+     * @Route("/{id}/watch", name="company_watch", methods="GET")
      */
-    public function watcher(Company $company)
+    public function watch(Company $company): Response
     {
         $watcher = new CompanyWatcher();
         $watcher->setCompany($company);
@@ -105,6 +105,18 @@ class CompanyController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($watcher);
+        $em->flush();
+
+        return $this->redirectToRoute('company_index');
+    }
+
+    /**
+     * @Route("/{id}/unwatch", name="company_unwatch", methods="GET")
+     */
+    public function unwatch(CompanyWatcher $watcher): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($watcher);
         $em->flush();
 
         return $this->redirectToRoute('company_index');
