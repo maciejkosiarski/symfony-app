@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\CompanyWatcher;
 use App\Form\CompanyType;
+use App\Repository\CompanyRepository;
+use App\Repository\CompanyWatcherRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +20,22 @@ class CompanyController extends Controller
     /**
      * @Route("/", name="company_index", methods="GET")
      */
-    public function index(): Response
+    public function index(CompanyRepository $company, CompanyWatcherRepository $watcher): Response
     {
-        $companies = $this->getDoctrine()
-            ->getRepository(Company::class)
-            ->findAll();
+        $companies = $company->findAll();
+        $watchers = $watcher->findByUser($this->getUser());
+        foreach ($companies as $key => $value) {
+            $companies[$key]->watcher = null;
+            foreach ($watchers as $watcher) {
+                if ($watcher->getCompany() == $value) {
+                    $companies[$key]->watcher = $watcher;
+                }
+            }
+        }
 
-        return $this->render('company/index.html.twig', ['companies' => $companies]);
+        return $this->render('company/index.html.twig', [
+            'companies' => $companies,
+        ]);
     }
 
     /**

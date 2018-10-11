@@ -18,7 +18,7 @@
         </thead>
         <tbody>
         {% for company in companies %}
-            <tr>
+            <tr class="{{ company.watcher ? 'table-primary' : 'table-secondary' }}">
                 <td>{{ company.name }}</td>
                 <td>{{ company.active ? 'Yes' : 'No' }}</td>
                 <td>{{ company.id }}</td>
@@ -27,7 +27,11 @@
                 <td>
                     <a href="{{ path('company_show', {'id': company.id}) }}">show</a>
                     <a href="{{ path('company_edit', {'id': company.id}) }}">edit</a>
-                    <a href="{{ path('company_watch', {'id': company.id}) }}">watch</a>
+                    {% if company.watcher %}
+                        <a href="{{ path('company_unwatch', {'id': company.watcher.id}) }}">unwatch</a>
+                    {% else %}
+                        <a href="{{ path('company_watch', {'id': company.id}) }}">watch</a>
+                    {% endif %}
                 </td>
             </tr>
         {% else %}
