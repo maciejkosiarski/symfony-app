@@ -20,13 +20,54 @@ class CompanyShareRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findExtremesByCompany(Company $company)
+    public function findExtremesByCompany(Company $company): array
     {
-        return  $this->createQueryBuilder('share')
-            ->Where('share.company = :company')
+        return  $this->createQueryBuilder('s')
+            ->Where('s.company = :company')
             ->setParameter('company', $company)
-            ->select('MAX(share.price) as max, MIN(share.price) as min')
+            ->select('MAX(s.price) as max, MIN(s.price) as min')
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function findLastPreviousDay(Company $company)
+    {
+        return  $this->createQueryBuilder('s')
+            ->where('s.company = :company')
+            ->andWhere('s.createdAt BETWEEN :start AND :end')
+            ->setParameter('start', date('Y-m-d', strtotime('-1 days')))
+            ->setParameter('end', date('Y-m-d'))
+            ->setParameter('company', $company)
+            ->select('s')
+            ->orderBy('s.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
+
+    public function findLastSixDays(Company $company): array
+    {
+        return $this->createQueryBuilder('s')
+            ->where('s.company = :company')
+            ->andWhere('s.createdAt BETWEEN :last5days AND :today')
+            ->setParameter('company', $company)
+            ->setParameter('today', date('Y-m-d', strtotime('+1 days')))
+            ->setParameter('last5days', date('Y-m-d', strtotime('-5 days')))
+            ->select('s')
+            ->orderBy('s.createdAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByLastDays(Company $company, int $days): array
+    {
+        return  $this->createQueryBuilder('s')
+            ->where('s.company = :company')
+            ->setParameter('company', $company)
+            ->select('s')
+            ->orderBy('s.createdAt', 'ASC')
+            ->setMaxResults($days * 5)
+            ->getQuery()
+            ->getResult();
     }
 }
