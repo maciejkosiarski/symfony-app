@@ -33,15 +33,24 @@ class ShareFoundListener
     {
         $share = $event->getShare();
 
-        if ($body = $this->analyzer->checkExtremes($share)) {
-            $repository = $this->em->getRepository(CompanyWatcher::class);
-            /** @var CompanyWatcher $watcher */
-            foreach ($repository->findByCompany($share->getCompany()) as $watcher) {
-                $this->mail->send(
-                    $watcher->getCompany()->getName(),
-                    $watcher->getUser()->getEmail(),
-                    $body
-                );
+        $messages = [];
+        $messages[] = $this->analyzer->checkExtremes($share);
+        $messages[] = $this->analyzer->checkDifference($share);
+
+        $repository = $this->em->getRepository(CompanyWatcher::class);
+
+        $watchers = $repository->findByCompany($share->getCompany());
+
+        foreach ($messages as $message) {
+            if ($message) {
+                /** @var CompanyWatcher $watcher */
+                foreach ($watchers as $watcher) {
+                    $this->mail->send(
+                        $watcher->getCompany()->getName(),
+                        $watcher->getUser()->getEmail(),
+                        $message
+                    );
+                }
             }
         }
 
