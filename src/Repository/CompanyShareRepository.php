@@ -30,13 +30,16 @@ class CompanyShareRepository extends ServiceEntityRepository
             ->getSingleResult();
     }
 
-    public function findLastPreviousDay(Company $company)
+    /**
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findLastPreviousDay(Company $company): CompanyShare
     {
         return  $this->createQueryBuilder('s')
             ->where('s.company = :company')
-            ->andWhere('s.createdAt BETWEEN :start AND :end')
-            ->setParameter('start', date('Y-m-d', strtotime('-1 days')))
-            ->setParameter('end', date('Y-m-d'))
+            ->andWhere('s.createdAt <= :today')
+            ->setParameter('today', date('Y-m-d'))
             ->setParameter('company', $company)
             ->select('s')
             ->orderBy('s.createdAt', 'DESC')

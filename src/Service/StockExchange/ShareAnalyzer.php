@@ -36,8 +36,6 @@ class ShareAnalyzer
 
     private function analyzeWeek(Company $company)
     {
-        $this->checkDifference();
-        die;
         $shares = $this->shareRepository->findLastSixDays($company);
         /** @var CompanyShare $previous */
         $previous = null;
@@ -133,6 +131,10 @@ class ShareAnalyzer
         return '';
     }
 
+    /**
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function checkDifference(CompanyShare $share): string
     {
         $previous = $this->shareRepository->findLastPreviousDay($share->getCompany());
