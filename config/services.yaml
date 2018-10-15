@@ -67,6 +67,7 @@ services:
             $em: '@doctrine.orm.entity_manager'
             $analyzer: '@App\Service\StockExchange\ShareAnalyzer'
             $mail: '@App\Service\Mail'
+            $dispatcher: '@event_dispatcher'
         tags:
             - { name: kernel.event_listener, event: share.found }
 
@@ -75,3 +76,9 @@ services:
             $logger: '@monolog.logger.stock_exchange'
         tags:
             - { name: kernel.event_listener, event: share.found.exception }
+
+    App\EventListener\CatchExceptionListener:
+        arguments:
+            $logger: '@monolog.logger'
+        tags:
+        - { name: kernel.event_listener, event: catch.exception }

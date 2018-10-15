@@ -26,7 +26,5 @@ class ShareFoundExceptionListener
 				'trace' => $exception->getTraceAsString(),
 			]
 		);
-
-		$event->getLogger()->error($exception->getMessage());
 	}
 }
