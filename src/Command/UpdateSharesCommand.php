@@ -13,11 +13,10 @@ use App\Service\StockExchange\ShareFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class CheckSharesCommand extends Command
+class UpdateSharesCommand extends Command
 {
     use LockableTrait;
 
@@ -35,7 +34,7 @@ class CheckSharesCommand extends Command
 
     protected function configure(): void
     {
-        $this->setName('app:check:shares')
+        $this->setName('app:shares:update')
             ->setDescription('Find current shares prices of active companies')
             ->setHelp('');
     }
@@ -53,11 +52,11 @@ class CheckSharesCommand extends Command
                 try {
                     $this->dispatchFoundEvent($finder->find($company));
                 } catch (\Exception $e) {
-                    $this->dispatchFoundExceptionEvent($e, new ConsoleLogger($output));
+                    $this->dispatchFoundExceptionEvent($e);
                 }
             }
         } catch (\Exception $e) {
-            $this->dispatchFoundExceptionEvent($e, new ConsoleLogger($output));
+            $this->dispatchFoundExceptionEvent($e);
         } finally {
             $this->release();
         }
@@ -71,11 +70,11 @@ class CheckSharesCommand extends Command
         );
     }
 
-    private function dispatchFoundExceptionEvent(\Exception $e,  ConsoleLogger $logger): void
+    private function dispatchFoundExceptionEvent(\Exception $e): void
     {
         $this->dispatcher->dispatch(
             ShareFoundExceptionEvent::NAME,
-            new ShareFoundExceptionEvent($e, $logger)
+            new ShareFoundExceptionEvent($e)
         );
     }
 }
