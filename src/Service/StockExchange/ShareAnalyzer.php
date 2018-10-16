@@ -120,7 +120,7 @@ class ShareAnalyzer
 
         if ($share->getPrice() < $extremes['min']) {
             return 'Last minimal price: ' .
-                $extremes['max'] .
+                $extremes['min'] .
                 ' zł New one: ' .
                 $share->getPrice() .
                 ' zł Period from ' .
