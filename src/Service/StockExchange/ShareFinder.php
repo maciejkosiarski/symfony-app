@@ -31,7 +31,6 @@ class ShareFinder
      */
     public function find(Company $company): CompanyShare
     {
-
         /** @var CompanySource $source */
         foreach ($company->getSources() as $source) {
             try {

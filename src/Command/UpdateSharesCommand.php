@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\CompanyShare;
+use App\Event\StockExchange\CompanySourcesFailedEvent;
 use App\Event\StockExchange\ShareFoundEvent;
 use App\Event\StockExchange\ShareFoundExceptionEvent;
 use App\Exception\CommandAlreadyRunningException;
+use App\Exception\StockExchange\AllSourceFailedException;
 use App\Repository\CompanyRepository;
 use App\Service\StockExchange\ShareFinder;
 use Symfony\Component\Console\Command\Command;
@@ -51,6 +53,8 @@ class UpdateSharesCommand extends Command
             foreach ($this->repository->findByActive(true) as $company) {
                 try {
                     $this->dispatchFoundEvent($finder->find($company));
+                } catch (AllSourceFailedException $e) {
+                    $this->dispatchCompanySourcesFailedEvent($e);
                 } catch (\Exception $e) {
                     $this->dispatchFoundExceptionEvent($e);
                 }
@@ -75,6 +79,14 @@ class UpdateSharesCommand extends Command
         $this->dispatcher->dispatch(
             ShareFoundExceptionEvent::NAME,
             new ShareFoundExceptionEvent($e)
+        );
+    }
+
+    private function dispatchCompanySourcesFailedEvent(AllSourceFailedException $e)
+    {
+        $this->dispatcher->dispatch(
+            CompanySourcesFailedEvent::NAME,
+            new CompanySourcesFailedEvent($e)
         );
     }
 }
