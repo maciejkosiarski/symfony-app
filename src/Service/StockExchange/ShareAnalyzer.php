@@ -6,63 +6,122 @@ namespace App\Service\StockExchange;
 
 use App\Entity\Company;
 use App\Entity\CompanyShare;
+use App\Entity\CompanySource;
+use App\Entity\CompanyWatcher;
+use App\Entity\Notification;
 use App\Repository\CompanyRepository;
 use App\Repository\CompanyWatcherRepository;
 use App\Repository\CompanyShareRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ShareAnalyzer
 {
+    private $em;
     private $companyRepository;
     private $shareRepository;
     private $watcherRepository;
 
-    public function __construct(CompanyShareRepository $shareRepository, CompanyWatcherRepository $watcherRepository, CompanyRepository $companyRepository)
+    public function __construct(EntityManagerInterface $em, CompanyShareRepository $shareRepository, CompanyWatcherRepository $watcherRepository, CompanyRepository $companyRepository)
     {
+        $this->em = $em;
         $this->companyRepository = $companyRepository;
         $this->shareRepository = $shareRepository;
         $this->watcherRepository = $watcherRepository;
     }
 
-    public function analyze()
+    public function analyze(): void
     {
-        //$testCompany = $this->companyRepository->find(1);
-
-        //$this->analyzeWeek($testCompany);
-
-        //$this->analyzeMonth($testCompany);
-
-        //todo throw exception if 0 results
+        foreach ($this->companyRepository->findByActive(true) as $company) {
+            $this->analyzeWeek($company);
+        }
     }
 
-    private function analyzeWeek(Company $company)
+    private function analyzeWeek(Company $company): void
     {
-        $shares = $this->shareRepository->findLastSixDays($company);
-        /** @var CompanyShare $previous */
+        $watchers = $this->watcherRepository->findByCompany($company);
+
+        if (empty($watchers)) return;
+
+        $shares = $this->shareRepository->findAvgPriceFromLastSevenDays($company);
+        dd($shares);
+        $week = '(' . $shares[0]['created'] . ' : ' . $shares[count($shares) - 1]['created'] . ')';
+        $weekExtremes = $this->comparePrices((float) $shares[0]['avg'], (float) $shares[count($shares) - 1]['avg']);
+
+        $sources = [];
+
+        /** @var CompanySource $source */
+        foreach ($company->getSources() as $source) {
+            $sources[] = $source->getPath();
+        }
+
+        $source = '<br>' . implode('<br>', $sources);
+
+        if ($weekExtremes > 5) {
+            $message = $company->getName() . ' week extremes growth ' . $weekExtremes . '% ' . $week . ' ' .$source;
+            $this->notifyWatchers($watchers, $message);
+        }
+
+        if ($weekExtremes < -5) {
+            $message = $company->getName() . ' week extremes decrease ' . $weekExtremes . '% ' . $week . ' ' .$source;
+            $this->notifyWatchers($watchers, $message);
+        }
+
         $previous = null;
         $pricesDifference = [];
-        /** @var CompanyShare $share */
+
         foreach ($shares as $share) {
             if ($previous) {
-                $pricesDifference[] = $this->comparePrices($previous->getPrice(), $share->getPrice());;
-                $previous = $share;
+                $pricesDifference[] = $this->comparePrices((float) $previous, (float) $share['avg']);
+                $previous = $share['avg'];
             } else {
-                $previous = $share;
+                $previous = $share['avg'];
             }
         }
 
-
         if ($this->allPositive($pricesDifference)) {
-            dump('all positive');
+            $message = $company->getName() . ' all week growth ' . implode(' ,', $pricesDifference) . $week . ' ' .$source;
+            $this->notifyWatchers($watchers, $message);
         }
 
         if ($this->allNegative($pricesDifference)) {
-            dump('all negative');
+            $message = $company->getName() . ' all week decrease ' . implode(' ,', $pricesDifference) . $week . ' ' .$source;
+            $this->notifyWatchers($watchers, $message);
+        }
+
+        $weekAvg = round(array_sum($pricesDifference) / count($pricesDifference), 2);
+
+        if ($weekAvg > 5) {
+            $message = $company->getName() . ' week average growth ' . $weekAvg . '% ' . $week . ' ' .$source;
+            $this->notifyWatchers($watchers, $message);
+        }
+
+        if ($weekAvg < -5) {
+            $message = $company->getName() . ' week average decrease ' . $weekAvg . '% ' . $week . ' ' .$source;
+            $this->notifyWatchers($watchers, $message);
         }
     }
 
     private function analyzeMonth(Company $company)
     {
 
+    }
+
+    private function notifyWatchers(array $watchers, string $message)
+    {
+        foreach ($watchers as $watcher) {
+            if ($watcher instanceof CompanyWatcher) {
+                $notification = new Notification();
+                $notification->setUser($watcher->getUser());
+                $notification->setType(Notification::TYPE_EMAIL);
+                $notification->setMessage($message);
+                $notification->setRecurrent(false);
+                $notification->setIntervalExpression('* * * * *');
+
+                $this->em->persist($notification);
+            }
+        }
+
+        $this->em->flush();
     }
 
     private function comparePrices(float $previous, float $current): float

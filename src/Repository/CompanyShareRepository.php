@@ -62,6 +62,27 @@ class CompanyShareRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function findAvgPriceFromLastSevenDays(Company $company): array
+    {
+
+        $sql =  'SELECT AVG(s.price), s.created_at::date as created
+                FROM app_company_shares as s 
+                WHERE s.company_id = ? AND s.created_at BETWEEN ? AND ? 
+                GROUP BY created
+                ORDER BY created ASC';
+
+        $stmt =$this->_em->getConnection()->prepare($sql);
+        $stmt->bindValue(1, $company->getId());
+        $stmt->bindValue(2, date('Y-m-d', strtotime('-6 days')));
+        $stmt->bindValue(3, date('Y-m-d', strtotime('+1 day')));
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     public function findByLastDays(Company $company, int $days): array
     {
         return  $this->createQueryBuilder('s')
