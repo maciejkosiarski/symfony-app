@@ -43,7 +43,6 @@ class ShareAnalyzer
         if (empty($watchers)) return;
 
         $shares = $this->shareRepository->findAvgPriceFromLastSevenDays($company);
-        dd($shares);
         $week = '(' . $shares[0]['created'] . ' : ' . $shares[count($shares) - 1]['created'] . ')';
         $weekExtremes = $this->comparePrices((float) $shares[0]['avg'], (float) $shares[count($shares) - 1]['avg']);
 
