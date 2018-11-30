@@ -21,8 +21,12 @@ class ShareAnalyzer
     private $shareRepository;
     private $watcherRepository;
 
-    public function __construct(EntityManagerInterface $em, CompanyShareRepository $shareRepository, CompanyWatcherRepository $watcherRepository, CompanyRepository $companyRepository)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        CompanyShareRepository $shareRepository,
+        CompanyWatcherRepository $watcherRepository,
+        CompanyRepository $companyRepository
+    ){
         $this->em = $em;
         $this->companyRepository = $companyRepository;
         $this->shareRepository = $shareRepository;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 abstract class BaseEntity
 {
@@ -12,16 +13,19 @@ abstract class BaseEntity
 	 * @ORM\Column(name="id", type="integer", nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
 	 */
 	protected $id;
 
 	/**
 	 * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     * @Groups({"api"})
 	 */
 	protected $createdAt;
 
 	/**
 	 * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     * @Groups({"api"})
 	 */
 	protected $updatedAt;
 
@@ -52,7 +56,8 @@ abstract class BaseEntity
 
 	/**
 	 * @ORM\PrePersist()
-	 */
+     * @throws \Exception
+     */
 	public function prePersist(): void
 	{
 		$this->createdAt = $this->updatedAt = new \DateTime();
@@ -60,7 +65,8 @@ abstract class BaseEntity
 
 	/**
 	 * @ORM\PreUpdate()
-	 */
+     * @throws \Exception
+     */
 	public function preUpdate(): void
 	{
 		$this->updatedAt = new \DateTime();

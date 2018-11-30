@@ -29,7 +29,7 @@ class SmsGateway
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function send(Sms $sms)
+    public function send(Sms $sms): void
     {
         $this->sendRequest($this->getSendBody($sms), $this->uri . self::SEND);
     }
@@ -47,13 +47,11 @@ class SmsGateway
 
     private function getSendBody(Sms $sms): string
     {
-        $body = '[{';
-        $body .= '"phone_number":"' . $sms->getReceiver() . '",';
-        $body .= '"message":"' . $sms->getMessage() . '",';
-        $body .= '"device_id":' . $this->device;
-        $body .= '}]';
-
-        return $body;
+        return sprintf('[{"phone_number":"%s", "message":"%s", "device_id": "%s"}]',
+            $sms->getReceiver(),
+            $sms->getMessage(),
+            $this->device
+        );
     }
 
     private function getHeaders(): array

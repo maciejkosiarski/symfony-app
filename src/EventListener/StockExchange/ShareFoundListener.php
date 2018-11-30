@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventListener\StockExchange;
 
 use App\Entity\CompanyWatcher;
+use App\Entity\Notification;
 use App\Event\StockExchange\ShareFoundEvent;
 use App\Event\StockExchange\ShareFoundExceptionEvent;
 use App\Service\Mail;
@@ -48,12 +49,18 @@ class ShareFoundListener
                 if ($message) {
                     /** @var CompanyWatcher $watcher */
                     foreach ($watchers as $watcher) {
-                        $this->mail->send(
-                            $watcher->getCompany()->getName(),
-                            $watcher->getUser()->getEmail(),
-                            $message
-                        );
+                        $notification = new Notification();
+                        $notification->setUser($watcher->getUser());
+                        $notification->setMessage($message);
+                        $notification->setIntervalExpression('* * * * *');
+                        $notification->setRecurrent(false);
+                        $notification->setType(Notification::TYPE_EMAIL);
+
+                        $this->em->persist($notification);
                     }
+
+                    $this->em->flush();
+                    $this->em->clear(Notification::class);
                 }
             }
         } catch (\Exception $e) {
