@@ -10,6 +10,10 @@ trait ApiResponsible
 {
     protected function getJsonResponse(string $json, int $status = 200): JsonResponse
     {
+        if (0 === $status) {
+            $status = 500;
+        }
+
         return new JsonResponse($json, $status,  [], true);
     }
 }
