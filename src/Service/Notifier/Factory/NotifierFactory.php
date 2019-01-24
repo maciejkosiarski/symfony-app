@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Notifier\Factory;
 
 use App\Exception\CreateNotifierException;
+use App\Service\Notifier\MessengerNotifier;
 use App\Service\SmsGateway;
 use App\Service\Notifier\MailNotifier;
 use App\Service\Notifier\Notifier;
@@ -38,6 +39,11 @@ class NotifierFactory
     {
         return new SmsNotifier($this->smsGateway);
 	}
+
+    private function createMessengerNotifier(): MessengerNotifier
+    {
+        return new MessengerNotifier();
+    }
 
 	/**
 	 * @required

@@ -35,18 +35,18 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist }
 
-    App\EventListener\NotificationSendedListener:
+    App\EventListener\NotificationSentListener:
         arguments:
             $logger: '@monolog.logger.notifications'
             $em: '@doctrine.orm.entity_manager'
         tags:
-            - { name: kernel.event_listener, event: notification.sended }
+            - { name: kernel.event_listener, event: notification.sent }
 
-    App\EventListener\NotificationSendedExceptionListener:
+    App\EventListener\NotificationSentExceptionListener:
         arguments:
             $logger: '@monolog.logger.notifications'
         tags:
-            - { name: kernel.event_listener, event: notification.sended.exception }
+            - { name: kernel.event_listener, event: notification.sent.exception }
 
     App\EventListener\NotificationActivatedListener:
         arguments:

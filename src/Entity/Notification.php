@@ -18,9 +18,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Notification extends BaseEntity
 {
-	const TYPE_EMAIL   = 1;
-	const TYPE_BROWSER = 2;
-	const TYPE_SMS 	   = 3;
+	const TYPE_EMAIL     = 1;
+	const TYPE_BROWSER   = 2;
+	const TYPE_SMS 	     = 3;
+	const TYPE_MESSENGER = 4;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="notifications")
@@ -198,7 +199,6 @@ class Notification extends BaseEntity
 	private function getDefaultExpressions(): array
 	{
 		return [
-			'@yearly'   => '0 0 1 1 *',
 			'@annually' => '0 0 1 1 *',
 			'@monthly'  => '0 0 1 * *',
 			'@weekly'   => '0 0 * * 0',
