@@ -49,8 +49,8 @@ class User extends BaseEntity implements UserInterface, \Serializable
 	private $phone;
 
     /**
-     * @ORM\Column(name="facebook_id", type="integer", unique=true, nullable=true)
-     * @Assert\Type("integer")
+     * @ORM\Column(name="facebook_id", type="string", unique=true, nullable=true)
+     * @Assert\Type("string")
      */
 	private $facebookId;
 
@@ -125,12 +125,12 @@ class User extends BaseEntity implements UserInterface, \Serializable
 		$this->phone = $phone;
 	}
 
-    public function getFacebookId(): int
+    public function getFacebookId(): string
     {
         return $this->facebookId;
     }
 
-    public function setFacebookId(int $facebookId): void
+    public function setFacebookId(string $facebookId): void
     {
         $this->facebookId = $facebookId;
     }
