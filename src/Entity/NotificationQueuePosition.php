@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class NotificationQueuePosition extends BaseEntity
 {
 	const STATUS_PENDING  = 1;
-	const STATUS_SENDED   = 2;
+	const STATUS_SENT     = 2;
 	const STATUS_CANCELED = 3;
 
 	/**

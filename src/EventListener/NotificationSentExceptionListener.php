@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\EventListener;
 
-use App\Event\NotificationSendedExceptionEvent;
+use App\Event\NotificationSentExceptionEvent;
 use Psr\Log\LoggerInterface;
 
-class NotificationSendedExceptionListener
+class NotificationSentExceptionListener
 {
 	private $logger;
 
@@ -16,7 +16,7 @@ class NotificationSendedExceptionListener
 		$this->logger = $logger;
 	}
 
-	public function onNotificationSendedException(NotificationSendedExceptionEvent $event): void
+	public function onNotificationSentException(NotificationSentExceptionEvent $event): void
 	{
 		$exception = $event->getException();
 

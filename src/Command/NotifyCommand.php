@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Entity\NotificationQueuePosition;
-use App\Event\NotificationSendedEvent;
-use App\Event\NotificationSendedExceptionEvent;
+use App\Event\NotificationSentEvent;
+use App\Event\NotificationSentExceptionEvent;
 use App\Repository\NotificationQueuePositionRepository;
 use App\Service\Notifier\Factory\NotifierFactory;
 use Symfony\Component\Console\Command\Command;
@@ -25,7 +25,6 @@ class NotifyCommand extends Command
 	private $dispatcher;
 
 	public function __construct(
-		?string $name = null,
 		NotificationQueuePositionRepository $repository,
 		NotifierFactory $factory,
 		EventDispatcherInterface $dispatcher
@@ -34,7 +33,7 @@ class NotifyCommand extends Command
 		$this->factory    = $factory;
 		$this->dispatcher = $dispatcher;
 
-		parent::__construct($name);
+		parent::__construct();
 	}
 
 	protected function configure(): void
@@ -54,26 +53,26 @@ class NotifyCommand extends Command
 			foreach ($this->repository->getQueueToSendByNotifier($notifier) as $queuePosition) {
 				$notifier->notify($queuePosition->getNotification());
 
-				$this->dispatchSendedEvent($queuePosition);
+				$this->dispatchSentEvent($queuePosition);
 			}
 		} catch (\Exception $e) {
-			$this->dispatchSendedExceptionEvent($e, new ConsoleLogger($output));
+			$this->dispatchSentExceptionEvent($e, new ConsoleLogger($output));
 		}
 	}
 
-	private function dispatchSendedEvent(NotificationQueuePosition $queuePosition): void
+	private function dispatchSentEvent(NotificationQueuePosition $queuePosition): void
 	{
 		$this->dispatcher->dispatch(
-			NotificationSendedEvent::NAME,
-			new NotificationSendedEvent($queuePosition)
+			NotificationSentEvent::NAME,
+			new NotificationSentEvent($queuePosition)
 		);
 	}
 
-	private function dispatchSendedExceptionEvent(\Exception $e, ConsoleLogger $logger): void
+	private function dispatchSentExceptionEvent(\Exception $e, ConsoleLogger $logger): void
 	{
 		$this->dispatcher->dispatch(
-			NotificationSendedExceptionEvent::NAME,
-			new NotificationSendedExceptionEvent($e, $logger)
+			NotificationSentExceptionEvent::NAME,
+			new NotificationSentExceptionEvent($e, $logger)
 		);
 	}
 }

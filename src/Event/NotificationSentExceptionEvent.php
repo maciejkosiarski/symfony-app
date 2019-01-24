@@ -7,9 +7,9 @@ namespace App\Event;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\EventDispatcher\Event;
 
-class NotificationSendedExceptionEvent extends Event
+class NotificationSentExceptionEvent extends Event
 {
-	const NAME = 'notification.sended.exception';
+	const NAME = 'notification.sent.exception';
 
 	protected $exception;
 

@@ -6,7 +6,7 @@ namespace App\Exception;
 
 class InvalidNotificationTypeException extends \Exception
 {
-	public function __construct(string $type, array $types)
+	public function __construct(int $type, array $types)
 	{
 		$message = sprintf('The passed notification type (%s) is unacceptable, allowed types: %s', $type, implode(',', $types));
 

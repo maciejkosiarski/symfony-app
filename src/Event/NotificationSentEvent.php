@@ -7,9 +7,9 @@ namespace App\Event;
 use App\Entity\NotificationQueuePosition;
 use Symfony\Component\EventDispatcher\Event;
 
-class NotificationSendedEvent extends Event
+class NotificationSentEvent extends Event
 {
-	const NAME = 'notification.sended';
+	const NAME = 'notification.sent';
 
 	protected $queuePosition;
 

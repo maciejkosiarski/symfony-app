@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Entity\NotificationQueuePosition;
-use App\Event\NotificationSendedEvent;
+use App\Event\NotificationSentEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
-class NotificationSendedListener
+class NotificationSentListener
 {
 	private $logger;
-
 	private $em;
 
 	public function __construct(LoggerInterface $logger, EntityManagerInterface $em)
@@ -25,16 +24,16 @@ class NotificationSendedListener
 	 * @throws \App\Exception\InvalidQueueStatusException
 	 * @throws \ReflectionException
 	 */
-	public function onNotificationSended(NotificationSendedEvent $event): void
+	public function onNotificationSent(NotificationSentEvent $event): void
 	{
 		$queuePosition = $event->getNotificationQueuePosition();
 
 		$this->logger->info(sprintf(
-			'Notification id: %s successfully sended.',
+			'Notification id: %s successfully sent.',
 			$queuePosition->getNotification()->getId())
 		);
 
-		$queuePosition->setStatus(NotificationQueuePosition::STATUS_SENDED);
+		$queuePosition->setStatus(NotificationQueuePosition::STATUS_SENT);
 
 		if ($queuePosition->getNotification()->isRecurrent()) {
 			$dueDate = $queuePosition->getNotification()->getDateTimeNextRun();
