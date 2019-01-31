@@ -33,6 +33,11 @@ class ShareAnalyzer
         $this->watcherRepository = $watcherRepository;
     }
 
+    /**
+     * @throws \App\Exception\InvalidNotificationTypeException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \ReflectionException
+     */
     public function analyze(): void
     {
         foreach ($this->companyRepository->findByActive(true) as $company) {
@@ -40,6 +45,11 @@ class ShareAnalyzer
         }
     }
 
+    /**
+     * @throws \App\Exception\InvalidNotificationTypeException
+     * @throws \Doctrine\DBAL\DBALException
+     * @throws \ReflectionException
+     */
     private function analyzeWeek(Company $company): void
     {
         $watchers = $this->watcherRepository->findByCompany($company);
@@ -104,11 +114,10 @@ class ShareAnalyzer
         }
     }
 
-    private function analyzeMonth(Company $company)
-    {
-
-    }
-
+    /**
+     * @throws \App\Exception\InvalidNotificationTypeException
+     * @throws \ReflectionException
+     */
     private function notifyWatchers(array $watchers, string $message)
     {
         foreach ($watchers as $watcher) {
@@ -171,23 +180,26 @@ class ShareAnalyzer
         $extremes = $this->findExtremes($share->getCompany());
 
         if ($share->getPrice() > $extremes['max']) {
-            return 'Last maximal price: ' .
-                $extremes['max'] .
-                ' zł New one: ' .
-                $share->getPrice() .
-                ' zł Period from ' .
-                $share->getCompany()->getCreatedAt()->format('Y-m-d') .
-                ' to today';
+            $format = '%s Last maximal price: %s zł New one: %s zł Period from %s to today';
+            return sprintf(
+                $format,
+                $share->getCompany()->getName(),
+                $extremes['max'],
+                $share->getPrice(),
+                $share->getCompany()->getCreatedAt()->format('Y-m-d')
+            );
+
         }
 
         if ($share->getPrice() < $extremes['min']) {
-            return 'Last minimal price: ' .
-                $extremes['min'] .
-                ' zł New one: ' .
-                $share->getPrice() .
-                ' zł Period from ' .
-                $share->getCompany()->getCreatedAt()->format('Y-m-d') .
-                ' to today';
+            $format = '%s Last maximal price: %s zł New one: %s zł Period from %s to today';
+            return sprintf(
+                $format,
+                $share->getCompany()->getName(),
+                $extremes['min'],
+                $share->getPrice(),
+                $share->getCompany()->getCreatedAt()->format('Y-m-d')
+            );
         }
 
         return '';

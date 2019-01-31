@@ -61,7 +61,10 @@ class Notification extends BaseEntity
 	 * @ORM\Column(name="interval_expression", type="string", nullable=false)
 	 * @Assert\NotBlank()
 	 * @Assert\Type(type="string")
-	 * @Assert\Regex(pattern="^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$^", message="Interval expression has invalid format.")
+	 * @Assert\Regex(
+     *     pattern="^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$^",
+     *     message="Interval expression has invalid format."
+     * )
 	 */
 	private $intervalExpression;
 
@@ -221,6 +224,25 @@ class Notification extends BaseEntity
 		return $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
 	}
 
+    /**
+     * @throws \Exception
+     */
+    public function getDateTimeSpecificNextRun($run): \DateTime
+    {
+        $cronExpression = CronExpression::factory($this->intervalExpression);
+        /** @var \DateTime[] $runDates */
+        $runDates  = $cronExpression->getMultipleRunDates($run);
+
+        $dudeDate = new \DateTime();
+        $dudeDate->setTimestamp($runDates[$run - 1]->getTimestamp());
+        $dudeDate->setTimezone($runDates[$run - 1]->getTimezone());
+
+        return $dudeDate;
+    }
+
+    /**
+     * @throws \Exception
+     */
 	public function getDateTimeNextRun(): \DateTime
 	{
 		$cronExpression = CronExpression::factory($this->intervalExpression);
@@ -228,19 +250,6 @@ class Notification extends BaseEntity
 		$dudeDate = new \DateTime();
 		$dudeDate->setTimestamp($cronExpression->getNextRunDate()->getTimestamp());
 		$dudeDate->setTimezone($cronExpression->getNextRunDate()->getTimezone());
-
-		return $dudeDate;
-	}
-
-	public function getDateTimeSpecificNextRun($run): \DateTime
-	{
-		$cronExpression = CronExpression::factory($this->intervalExpression);
-		/** @var \DateTime[] $runDates */
-		$runDates  = $cronExpression->getMultipleRunDates($run);
-
-		$dudeDate = new \DateTime();
-		$dudeDate->setTimestamp($runDates[$run - 1]->getTimestamp());
-		$dudeDate->setTimezone($runDates[$run - 1]->getTimezone());
 
 		return $dudeDate;
 	}

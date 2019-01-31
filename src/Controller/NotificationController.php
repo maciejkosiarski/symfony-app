@@ -33,10 +33,6 @@ class NotificationController extends Controller
 	 *		"page"="\d+",
 	 * 		"limit"="\d+"
 	 *  })
-	 * @param NotificationRepository $notificationRepository
-	 * @param int $page
-	 * @param int $limit
-	 * @return Response
 	 * @throws \ReflectionException
 	 */
     public function index(NotificationRepository $notificationRepository, int $page, int $limit): Response
@@ -61,10 +57,6 @@ class NotificationController extends Controller
      *		"page"="\d+",
      * 		"limit"="\d+"
      *  })
-     * @param NotificationQueuePositionRepository $repository
-     * @param int $page
-     * @param int $limit
-     * @return Response
      * @throws \ReflectionException
      */
     public function listActive(NotificationQueuePositionRepository $repository, int $page, int $limit): Response
@@ -82,8 +74,6 @@ class NotificationController extends Controller
 
     /**
      * @Route("/new", name="notification_new", methods="GET|POST")
-	 * @param Request $request
-	 * @return Response
 	 */
     public function new(Request $request): Response
     {
@@ -114,8 +104,6 @@ class NotificationController extends Controller
 
     /**
      * @Route("/{id}", name="notification_show", methods="GET")
-	 * @param Notification $notification
-	 * @return Response
 	 * @throws \ReflectionException
 	 */
     public function show(Notification $notification): Response
@@ -128,9 +116,6 @@ class NotificationController extends Controller
 
     /**
      * @Route("/{id}/edit", name="notification_edit", methods="GET|POST")
-	 * @param Request      $request
-	 * @param Notification $notification
-	 * @return Response
 	 */
     public function edit(Request $request, Notification $notification): Response
     {
@@ -156,9 +141,6 @@ class NotificationController extends Controller
 
     /**
      * @Route("/{id}", name="notification_delete", methods="DELETE")
-	 * @param Request      $request
-	 * @param Notification $notification
-	 * @return Response
 	 */
     public function delete(Request $request, Notification $notification): Response
     {
@@ -185,9 +167,6 @@ class NotificationController extends Controller
 
 	/**
 	 * @Route("/{id}/toggle/active", name="notification_toggle_active", methods="GET")
-	 * @param Notification $notification
-	 * @param EventDispatcherInterface $dispatcher
-	 * @return Response
 	 */
 	public function activeToggle(Notification $notification, EventDispatcherInterface $dispatcher): Response
 	{
@@ -204,8 +183,6 @@ class NotificationController extends Controller
 
 	/**
 	 * @Route("/{id}/toggle/recurrent", name="notification_toggle_recurrent", methods="GET")
-	 * @param Notification $notification
-	 * @return Response
 	 */
 	public function recurrentToggle(Notification $notification): Response
 	{
@@ -218,10 +195,6 @@ class NotificationController extends Controller
 		return $this->redirectToRoute('notification_index');
 	}
 
-	/**
-	 * @param Notification             $notification
-	 * @param EventDispatcherInterface $dispatcher
-	 */
 	private function activeToggleDispatch(Notification $notification, EventDispatcherInterface $dispatcher)
 	{
 		if ($notification->isActive()) {
