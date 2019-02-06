@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @Route("/library/api/v1/tags")
+ * @Route("/api/v1/library/tags")
  */
 class TagController extends Controller
 {

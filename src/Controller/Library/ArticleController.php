@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @Route("/library/api/v1/articles")
+ * @Route("/api/v1/library/articles")
  */
 class ArticleController extends Controller
 {
