@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Library;
 
 use App\Entity\BaseEntity;
+use App\Entity\DataLoader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +21,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Tag extends BaseEntity
 {
+    use DataLoader;
+
     /**
      * @ORM\Column(name="name", type="string", nullable=false, unique=true, length=20)
      * @Assert\Type("string")

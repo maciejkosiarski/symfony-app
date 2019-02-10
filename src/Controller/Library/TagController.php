@@ -5,6 +5,7 @@ namespace App\Controller\Library;
 use App\Controller\ApiResponsible;
 use App\Entity\Library\Tag;
 use App\Repository\Library\TagRepository;
+use App\Service\Library\LibraryService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,24 +40,24 @@ class TagController extends Controller
             ], 'json', ['groups' => ['api']]));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            return $this->getJsonResponse('{"description":"Request failed"}', $e->getCode());
+            return $this->getJsonResponse('Request failed', $e->getCode());
         }
     }
 
     /**
      * @Route("/", name="library_tag_new", methods="POST")
      */
-    public function new(Request $request): JsonResponse
+    public function new(Request $request, LibraryService $library): JsonResponse
     {
         try {
-            $tag = new Tag();
-            // set tag
-            //persist flush
+            $tag = json_decode($request->getContent(), true);
+            $library->addTag($tag);
 
-            return $this->getJsonResponse('{"description":"Request success"}');
+            $message = '{"description":"New %s tag was successfully added"}';
+            return $this->getJsonResponse(sprintf($message, $tag['name']));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            return $this->getJsonResponse('{"description":"Request failed"}', $e->getCode());
+            return $this->getJsonResponse($e->getMessage(), $e->getCode());
         }
     }
 
@@ -71,7 +72,7 @@ class TagController extends Controller
             ], 'json', ['groups' => ['api']]));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            return $this->getJsonResponse('{"description":"Request failed"}', $e->getCode());
+            return $this->getJsonResponse('Request failed', $e->getCode());
         }
     }
 
@@ -87,7 +88,7 @@ class TagController extends Controller
             return $this->getJsonResponse('{"description":"Request success"}');
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            return $this->getJsonResponse('{"description":"Request failed"}', $e->getCode());
+            return $this->getJsonResponse('Request failed', $e->getCode());
         }
     }
 
@@ -103,7 +104,20 @@ class TagController extends Controller
             return $this->getJsonResponse('{"description":"Request success"}');
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
-            return $this->getJsonResponse('{"description":"Request failed"}', $e->getCode());
+            return $this->getJsonResponse('Request failed', $e->getCode());
+        }
+    }
+
+    /**
+     * @Route("/ping", name="library_tag_ping", methods="POST")
+     */
+    public function ping(): JsonResponse
+    {
+        try {
+            return $this->getJsonResponse('{"description":"Ping"}');
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+            return $this->getJsonResponse($e->getMessage(), $e->getCode());
         }
     }
 }

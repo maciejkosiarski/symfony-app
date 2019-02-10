@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Library;
 
 use App\Entity\Library\Article;
+use App\Entity\Library\Tag;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -37,6 +38,26 @@ class LibraryService
             }
         }
         $this->em->persist($article);
+        $this->em->flush();
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    public function addTag(array $data)
+    {
+        $tag = new Tag();
+        $tag->loadData($data);
+
+        $errors = $this->validator->validate($tag);
+
+        if ($errors->count()) {
+            /** @var ConstraintViolation $error */
+            foreach ($errors as $error) {
+                throw new \InvalidArgumentException($error->getPropertyPath() .': '. $error->getMessage(), 422);
+            }
+        }
+        $this->em->persist($tag);
         $this->em->flush();
     }
 }
