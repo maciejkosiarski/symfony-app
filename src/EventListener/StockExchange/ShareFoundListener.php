@@ -8,7 +8,6 @@ use App\Entity\CompanyWatcher;
 use App\Entity\Notification;
 use App\Event\StockExchange\ShareFoundEvent;
 use App\Event\StockExchange\ShareFoundExceptionEvent;
-use App\Service\Mail;
 use App\Service\StockExchange\ShareAnalyzer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -17,19 +16,13 @@ class ShareFoundListener
 {
     private $em;
     private $analyzer;
-    private $mail;
     private $dispatcher;
 
-    public function __construct(
-        EntityManagerInterface $em,
-        ShareAnalyzer $analyzer,
-        Mail $mail,
-        EventDispatcherInterface $dispatcher
-    ){
+    public function __construct(EntityManagerInterface $em, ShareAnalyzer $sa, EventDispatcherInterface $edi)
+    {
         $this->em = $em;
-        $this->analyzer = $analyzer;
-        $this->mail = $mail;
-        $this->dispatcher = $dispatcher;
+        $this->analyzer = $sa;
+        $this->dispatcher = $edi;
     }
 
     public function onShareFound(ShareFoundEvent $event): void
@@ -45,6 +38,9 @@ class ShareFoundListener
 
             $watchers = $repository->findByCompany($share->getCompany());
 
+            $this->em->persist($share);
+            $this->em->flush();
+
             foreach ($messages as $message) {
                 if ($message) {
                     /** @var CompanyWatcher $watcher */
@@ -57,18 +53,13 @@ class ShareFoundListener
                         $notification->setType(Notification::TYPE_EMAIL);
 
                         $this->em->persist($notification);
+                        $this->em->flush();
                     }
-
-                    $this->em->flush();
-                    $this->em->clear(Notification::class);
                 }
             }
         } catch (\Exception $e) {
             $this->dispatchShareFoundExceptionEvent($e);
         }
-
-        $this->em->persist($share);
-        $this->em->flush();
     }
 
     private function dispatchShareFoundExceptionEvent(\Exception $e): void

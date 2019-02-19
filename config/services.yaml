@@ -65,9 +65,8 @@ services:
     App\EventListener\StockExchange\ShareFoundListener:
         arguments:
             $em: '@doctrine.orm.entity_manager'
-            $analyzer: '@App\Service\StockExchange\ShareAnalyzer'
-            $mail: '@App\Service\Mail'
-            $dispatcher: '@event_dispatcher'
+            $sa: '@App\Service\StockExchange\ShareAnalyzer'
+            $edi: '@event_dispatcher'
         tags:
             - { name: kernel.event_listener, event: share.found }
 
