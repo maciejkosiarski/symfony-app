@@ -7,25 +7,29 @@ monolog:
             excluded_404s:
                 # regex: exclude all 404 errors from the logs
                 - ^/
+            channels: ["!event", "!notifications", "!stock_exchange"]
         nested:
             type: rotating_file
             max_files: 30
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: debug
-            channels: ["!event", "!notifications", "!stock_exchange"]
         console:
             type:   console
             process_psr_3_messages: false
-            channels: ["!event", "!doctrine", "!notifications"]
+            channels: []
         notifications_logging:
-            level: debug
+            level: 2
             type: rotating_file
             max_files: 30
-            path: "%kernel.logs_dir%/notifications.log"
+            path: "%kernel.logs_dir%/notifications/notifications.log"
             channels: [notifications]
+            filename_format: '{filename}_{date}'
+            date_format: 'Y_m_d'
         stock_exchange_logging:
-            level: debug
+            level: 2
             type: rotating_file
             max_files: 30
-            path: "%kernel.logs_dir%/stock-exchange.log"
+            path: "%kernel.logs_dir%/stock_exchange/stock_exchange.log"
             channels: [stock_exchange]
+            filename_format: '{filename}_{date}'
+            date_format: 'Y_m_d'
