@@ -211,7 +211,7 @@ class ShareAnalyzer
      */
     public function checkDifference(CompanyShare $share): string
     {
-        $previous = $this->shareRepository->findLastPreviousDay($share->getCompany());
+        $previous = $this->shareRepository->findLast($share->getCompany());
 
         $difference = $this->comparePrices($previous->getPrice(), $share->getPrice());
 

@@ -38,8 +38,24 @@ class CompanyShareRepository extends ServiceEntityRepository
     {
         return  $this->createQueryBuilder('s')
             ->where('s.company = :company')
-            ->andWhere('s.createdAt <= :today')
+            ->andWhere('s.createdAt >= :today')
             ->setParameter('today', date('Y-m-d'))
+            ->setParameter('company', $company)
+            ->select('s')
+            ->orderBy('s.createdAt', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
+    }
+
+    /**
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findLast(Company $company): CompanyShare
+    {
+        return  $this->createQueryBuilder('s')
+            ->where('s.company = :company')
             ->setParameter('company', $company)
             ->select('s')
             ->orderBy('s.createdAt', 'DESC')
