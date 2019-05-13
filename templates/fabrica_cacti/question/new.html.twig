@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Question{% endblock %}
+
+{% block body %}
+    <h1>Create new Question</h1>
+
+    {{ include('fabrica_cacti/question/_form.html.twig') }}
+
+    <a href="{{ path('fabrica_cacti_question_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Question{% endblock %}
+
+{% block body %}
+    <h1>Edit Question</h1>
+
+    {{ include('fabrica_cacti/question/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('fabrica_cacti_question_index') }}">back to list</a>
+
+    {{ include('fabrica_cacti/question/_delete_form.html.twig') }}
+{% endblock %}
