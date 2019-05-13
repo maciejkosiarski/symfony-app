@@ -109,7 +109,7 @@ class QuestionController extends Controller
         try {
             $q = $request->request->get('question');
             /** @var Question|null $question */
-            if ($question = $em->getRepository(Question::class)->findOneByQuestion($q)) {
+            if ($question = $em->getRepository(Question::class)->findOneBy(['question' => $q ,'active' => true])) {
                 return new JsonResponse($question->getAnswer());
             }
 
